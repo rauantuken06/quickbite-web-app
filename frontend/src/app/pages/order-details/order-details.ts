@@ -1,31 +1,30 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { mockOrders, Order, OrderStatus } from '../../dev_data/orders';
 
 @Component({
-  selector: 'app-orders',
+  selector: 'app-order-details',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './orders.html',
-  styleUrl: './orders.css'
+  templateUrl: './order-details.html',
+  styleUrl: './order-details.css'
 })
-export class Orders {
-  orders: Order[] = mockOrders;
-  expandedOrder: number | null = null;
+export class OrderDetails implements OnInit {
+  order: Order | undefined;
 
-  constructor(private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
-  toggleExpand(orderId: number): void {
-    this.expandedOrder = this.expandedOrder === orderId ? null : orderId;
+  ngOnInit(): void {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.order = mockOrders.find((o) => o.id === id);
   }
 
-  isExpanded(orderId: number): boolean {
-    return this.expandedOrder === orderId;
-  }
-
-  viewOrderDetails(orderId: number): void {
-    this.router.navigate(['/orders', orderId]);
+  goBackToOrders(): void {
+    this.router.navigate(['/orders']);
   }
 
   getStatusClass(status: OrderStatus): string {
@@ -52,16 +51,8 @@ export class Orders {
     }
   }
 
-  getItemCountText(count: number): string {
-    return `${count} item${count > 1 ? 's' : ''}`;
-  }
-
   getLineTotal(price: number, quantity: number): number {
     return price * quantity;
-  }
-
-  trackByOrderId(_: number, order: Order): number {
-    return order.id;
   }
 
   trackByIndex(index: number): number {

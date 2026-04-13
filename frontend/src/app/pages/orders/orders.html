@@ -1,1 +1,70 @@
-<p>orders works!</p>
+<section class="orders-page">
+  <header class="page-header">
+    <h1>Your Orders</h1>
+    <p>Track and view your order history</p>
+  </header>
+
+  <ng-container *ngIf="orders.length > 0; else emptyState">
+    <div class="orders-list">
+      <article class="order-card" *ngFor="let order of orders; trackBy: trackByOrderId">
+        <div class="order-main">
+          <div class="order-top">
+            <div>
+              <h3>Order #{{ order.id }}</h3>
+              <p class="order-date">{{ order.date }}</p>
+            </div>
+
+            <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+              <span class="material-symbols-outlined status-icon">{{ getStatusIcon(order.status) }}</span>
+              <span class="status-text">{{ order.status }}</span>
+            </span>
+          </div>
+
+          <div class="order-bottom">
+            <div>
+              <p class="meta">{{ getItemCountText(order.items.length) }}</p>
+              <p class="total">{{ order.total | currency }}</p>
+            </div>
+
+            <div class="actions">
+              <button class="btn btn-primary" type="button" (click)="viewOrderDetails(order.id)">
+                More Info
+              </button>
+
+              <button class="btn btn-outline" type="button" (click)="toggleExpand(order.id)">
+                <span>{{ isExpanded(order.id) ? 'Hide' : 'View' }} Details</span>
+                <span class="material-symbols-outlined arrow-icon">
+                  {{ isExpanded(order.id) ? 'expand_less' : 'expand_more' }}
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <section class="order-details" *ngIf="isExpanded(order.id)">
+          <h4>Order Items</h4>
+
+          <div class="items-list">
+            <div class="item-row" *ngFor="let item of order.items; trackBy: trackByIndex">
+              <span class="item-name">{{ item.quantity }}x {{ item.name }}</span>
+              <span class="item-price">{{ getLineTotal(item.price, item.quantity) | currency }}</span>
+            </div>
+
+            <div class="details-total">
+              <span>Total</span>
+              <span>{{ order.total | currency }}</span>
+            </div>
+          </div>
+        </section>
+      </article>
+    </div>
+  </ng-container>
+
+  <ng-template #emptyState>
+    <div class="empty-state">
+      <span class="material-symbols-outlined empty-icon">inventory_2</span>
+      <h3>No orders yet</h3>
+      <p>Your order history will appear here</p>
+    </div>
+  </ng-template>
+</section>

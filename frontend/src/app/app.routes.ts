@@ -13,7 +13,7 @@ export const routes: Routes = [
     },
     {
         path: 'menu',
-        canActivate: [authGuard],
+        // canActivate: [authGuard],
         loadComponent: () => import('./pages/menu/menu').then((m) => m.Menu)
     },
     {
@@ -23,8 +23,13 @@ export const routes: Routes = [
     },
     {
         path: 'orders',
-        canActivate: [authGuard],
+        // canActivate: [authGuard],
         loadComponent: () => import('./pages/orders/orders').then((m) => m.Orders)
+    },
+    {
+        path: 'orders/:id',
+        // canActivate: [authGuard],
+        loadComponent: () => import('./pages/order-details/order-details').then((m) => m.OrderDetails)
     },
     { path: '**', redirectTo: 'menu' }
 ];
