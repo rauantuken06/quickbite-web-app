@@ -1,1 +1,85 @@
-<p>menu works!</p>
+<section class="menu-page">
+    <div class="container">
+        <div class="toast" *ngIf="toastMessage">{{ toastMessage }}</div>
+        <ng-container *ngIf="!selectedRestaurant; else dishesView">
+            <header class="page-header">
+                <h1>Choose a Restaurant</h1>
+                <p>Select from our partnered restaurants</p>
+            </header>
+
+            <div class="restaurant-grid">
+                <article class="restaurant-card" *ngFor="let restaurant of restaurants"
+                    (click)="selectRestaurant(restaurant)">
+                    <div class="restaurant-image-wrap">
+                        <img [src]="restaurant.image" [alt]="restaurant.name" />
+                    </div>
+
+                    <div class="restaurant-body">
+                        <h3>{{ restaurant.name }}</h3>
+                        <p class="cuisine">{{ restaurant.cuisine }}</p>
+                        <p class="description">{{ restaurant.description }}</p>
+
+                        <div class="meta">
+                            <span>★ {{ restaurant.rating }}</span>
+                            <span>⏱ {{ restaurant.deliveryTime }}</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </ng-container>
+        
+        <ng-template #dishesView>
+            <button class="back-btn" (click)="backToRestaurants()">← Back to Restaurants</button>
+
+            <header class="restaurant-header">
+                <div>
+                    <h1>{{ selectedRestaurant?.name }}</h1>
+                    <p class="cuisine">{{ selectedRestaurant?.cuisine }} Cuisine</p>
+                    <p>{{ selectedRestaurant?.description }}</p>
+                </div>
+
+                <div class="meta right-meta">
+                    <span>★ {{ selectedRestaurant?.rating }}</span>
+                    <span>⏱ {{ selectedRestaurant?.deliveryTime }}</span>
+                </div>
+            </header>
+
+            <div class="photos" *ngIf="selectedRestaurant?.photos?.length">
+                <img *ngFor="let photo of selectedRestaurant?.photos" [src]="photo"
+                    [alt]="selectedRestaurant?.name + ' photo'" />
+            </div>
+
+            <div class="search-row">
+                <input type="text" placeholder="Search for dishes..." [(ngModel)]="searchQuery" />
+                <a routerLink="/cart" class="cart-link">Go to cart</a>
+            </div>
+
+            <div class="category-row">
+                <button *ngFor="let category of categories" class="category-chip"
+                    [class.active]="selectedCategory === category" (click)="selectedCategory = category">
+                    {{ category }}
+                </button>
+            </div>
+
+            <div class="dish-grid" *ngIf="filteredDishes.length > 0; else noDishes">
+                <article class="dish-card" *ngFor="let dish of filteredDishes">
+                    <div class="dish-image-wrap">
+                        <img [src]="dish.image" [alt]="dish.name" />
+                    </div>
+
+                    <div class="dish-body">
+                        <h3>{{ dish.name }}</h3>
+                        <p>{{ dish.description }}</p>
+
+                        <div class="dish-footer">
+                            <span class="price">{{ dish.price | currency }}</span>
+                            <button class="add-btn" (click)="addToCart(dish)">+ Add</button>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <ng-template #noDishes>
+                <p class="empty-state">No dishes found matching your criteria.</p>
+            </ng-template>
+        </ng-template>
