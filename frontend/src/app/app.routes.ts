@@ -32,9 +32,17 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/order-details/order-details').then((m) => m.OrderDetails)
   },
   {
-    path: 'admin/dishes',
+    path: 'admin',
     // canActivate: [authGuard],
-    loadComponent: () => import('./pages/admin-dishes/admin-dishes').then((m) => m.AdminDishes)
+    children: [
+      { path: 'categories', redirectTo: '/menu', pathMatch: 'full' },
+      { path: 'dishes', loadComponent: () => import('./pages/admin-dishes/admin-dishes').then((m) => m.AdminDishes) }    
+    ]
+  },
+  {
+    path: 'account',
+    //canActivate: [authGuard],
+    loadComponent: () => import('./pages/account/account').then((m) => m.Account)
   },
   { path: '**', redirectTo: 'menu' }
 ];

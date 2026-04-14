@@ -49,6 +49,14 @@
             <span>⚙️</span>
             <span>Admin</span>
           </a>
+          <a
+            routerLink="/account"
+            class="px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
+            [ngClass]="isActive('/account') ? 'bg-orange-50 text-orange-600' : 'text-gray-700 hover:bg-gray-100'"
+          >
+            <span>👤</span>
+            <span>Account</span>
+          </a>
         </div>
 
         <div class="flex items-center space-x-2">

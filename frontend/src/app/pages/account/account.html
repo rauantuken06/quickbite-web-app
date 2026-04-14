@@ -1,0 +1,81 @@
+<section class="account-page">
+  <header class="page-header">
+    <h1>My Account</h1>
+    <p>Manage your personal information and preferences</p>
+  </header>
+
+  <article class="card">
+    <div class="card-head">
+      <div class="title-wrap">
+        <span class="icon">👤</span>
+        <h2>Personal Information</h2>
+      </div>
+      <button class="btn btn-outline" type="button">Edit</button>
+    </div>
+
+    <div class="info-list">
+      <div>
+        <label>Full Name</label>
+        <p>{{ user.name }}</p>
+      </div>
+      <div>
+        <label>Email Address</label>
+        <p>✉ {{ user.email }}</p>
+      </div>
+      <div>
+        <label>Phone Number</label>
+        <p>☎ {{ user.phone }}</p>
+      </div>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head">
+      <div class="title-wrap">
+        <span class="icon">📍</span>
+        <h2>Delivery Address</h2>
+      </div>
+      <button class="btn btn-outline" type="button">Edit</button>
+    </div>
+
+    <div class="address-box">
+      <p>{{ user.deliveryAddress }}</p>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="card-head">
+      <div class="title-wrap">
+        <span class="icon">💳</span>
+        <h2>Payment Methods</h2>
+      </div>
+      <button class="btn btn-primary" type="button">Add New</button>
+    </div>
+
+    <div class="payment-list">
+      <div class="payment-item" *ngFor="let method of user.paymentMethods; trackBy: trackByPaymentId">
+        <div class="payment-left">
+          <div class="payment-icon">💳</div>
+          <div>
+            <div class="payment-title-row">
+              <p class="payment-title">{{ method.type }}</p>
+              <span class="badge-default" *ngIf="method.isDefault">✔ Default</span>
+            </div>
+            <p class="payment-details">{{ method.details }}</p>
+          </div>
+        </div>
+
+        <div class="payment-actions">
+          <button
+            class="btn btn-link"
+            type="button"
+            *ngIf="!method.isDefault"
+            (click)="setDefaultPaymentMethod(method.id)">
+            Set as Default
+          </button>
+          <button class="btn btn-icon" type="button" aria-label="Edit payment">✎</button>
+        </div>
+      </div>
+    </div>
+  </article>
+</section>
