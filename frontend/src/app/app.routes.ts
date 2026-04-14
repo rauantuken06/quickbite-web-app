@@ -35,7 +35,7 @@ export const routes: Routes = [
     path: 'admin',
     // canActivate: [authGuard],
     children: [
-      { path: 'categories', redirectTo: '/menu', pathMatch: 'full' },
+      { path: 'categories', loadComponent: () => import('./pages/admin-categories/admin-categories').then((m) => m.AdminCategories) },
       { path: 'dishes', loadComponent: () => import('./pages/admin-dishes/admin-dishes').then((m) => m.AdminDishes) }    
     ]
   },

@@ -1,0 +1,60 @@
+<div class="admin-page">
+    <div class="admin-subnav">
+        <a routerLink="/admin/categories" class="subnav-link">Dishes</a>
+        <a routerLink="/admin/categories" class="subnav-link active">Categories</a>
+    </div>
+
+    <div class="page-header">
+        <div>
+            <h1>Manage Categories</h1>
+            <p>Add, edit, or remove food categroies</p>
+        </div>
+
+        <button class="add-btn" (click)="openDialog()">Add Category</button>
+    </div>
+
+    <div class="categories-grid">
+        @for (category of categories; track category.id) {
+            <div class="category-card">
+                <div class="category-info">
+                    <h3>{{ category.name }}</h3>
+                </div>
+
+                <div class="category-actions">
+                    <button class="action-btn edit-btn" (click)="openDialog(category)">Edit</button>
+                    <button class="action-btn delete-btn" (click)="deleteCategory(category.id)">Delete</button>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (isDialogOpen) {
+        <div class="dialog-backdrop" (click)="closeDialog()">
+            <div class="dialog" (click)="$event.stopPropagation()">
+                <div class="dialog-header">
+                    <h2>{{ editingCategory ? 'Edit Category' : 'Add New Categroy' }}</h2>
+                </div>
+
+                <form class="category-form" (ngSubmit)="submitForm()">
+                    <div class="form-group">
+                        <label for="categoryName">Category Name *</label>
+                        <input
+                            id="categoryName"
+                            type="text"
+                            [(ngModel)]="categoryName"
+                            name="categoryName"
+                            placeholder="Enter category name"
+                        />
+                    </div>
+
+                    <div class="dialog-footer">
+                        <button type="button" class="secondary-btn" (click)="closeDialog()">Cancel</button>
+                        <button type="submit" class="primary-btn">
+                            {{ editingCategory ? 'Update' : 'Add' }} Category
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
+</div>
