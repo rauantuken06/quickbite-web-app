@@ -32,12 +32,9 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/order-details/order-details').then((m) => m.OrderDetails)
   },
   {
-    path: 'admin',
+    path: 'admin/dishes',
     // canActivate: [authGuard],
-    children: [
-      { path: 'categories', redirectTo: '/menu', pathMatch: 'full' },
-      { path: 'dishes', redirectTo: '/menu', pathMatch: 'full' }
-    ]
+    loadComponent: () => import('./pages/admin-dishes/admin-dishes').then((m) => m.AdminDishes)
   },
   { path: '**', redirectTo: 'menu' }
 ];
