@@ -44,11 +44,12 @@
                 </div>
             </header>
 
-            <div class="photos" *ngIf="selectedRestaurant?.photos?.length">
-                <img *ngFor="let photo of selectedRestaurant?.photos" [src]="photo"
-                    [alt]="selectedRestaurant?.name + ' photo'" />
-            </div>
-
+            <app-restaurant-carousel
+                *ngIf="selectedRestaurant?.photos?.length"
+                [photos]="selectedRestaurant!.photos"
+                [restaurantName]="selectedRestaurant!.name">
+            </app-restaurant-carousel>
+            
             <div class="search-row">
                 <input type="text" placeholder="Search for dishes..." [(ngModel)]="searchQuery" />
                 <a routerLink="/cart" class="cart-link">Go to cart</a>

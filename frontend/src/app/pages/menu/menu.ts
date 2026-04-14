@@ -6,6 +6,7 @@ import { Dish, dishes } from '../../dev_data/dishes';
 import { categories } from '../../dev_data/categories';
 import { MockData } from '../../services/mock-data';
 import { Restaurant } from '../../dev_data/restaurant';
+import { RestaurantCarousel } from '../../components/RestaurantCarousel/RestaurantCarousel';
 
 interface CartItem {
   id: number;
@@ -18,7 +19,7 @@ interface CartItem {
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, RestaurantCarousel],
   templateUrl: './menu.html',
   styleUrl: './menu.css'
 })
