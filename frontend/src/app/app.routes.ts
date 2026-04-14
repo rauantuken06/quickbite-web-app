@@ -31,5 +31,10 @@ export const routes: Routes = [
     // canActivate: [authGuard],
     loadComponent: () => import('./pages/order-details/order-details').then((m) => m.OrderDetails)
   },
+  {
+    path: 'admin/dishes',
+    // canActivate: [authGuard],
+    loadComponent: () => import('./pages/admin-dishes/admin-dishes').then((m) => m.AdminDishes)
+  },
   { path: '**', redirectTo: 'menu' }
 ];
