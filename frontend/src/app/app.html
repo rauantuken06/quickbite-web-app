@@ -1,1 +1,80 @@
-<router-outlet></router-outlet>
+<div class="min-h-screen bg-gray-50">
+  <nav class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a routerLink="/" class="flex items-center space-x-2">
+          <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
+            <span class="text-white text-lg">🍴</span>
+          </div>
+          <span class="text-xl font-bold text-gray-900">QuickBite</span>
+        </a>
+
+        <div class="hidden md:flex items-center space-x-1">
+          <a
+            routerLink="/menu"
+            class="px-4 py-2 rounded-lg transition-colors"
+            [ngClass]="isActive('/menu') || isActive('/') ? 'bg-orange-50 text-orange-600' : 'text-gray-700 hover:bg-gray-100'"
+          >
+            Menu
+          </a>
+
+          <a
+            routerLink="/cart"
+            class="px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
+            [ngClass]="isActive('/cart') ? 'bg-orange-50 text-orange-600' : 'text-gray-700 hover:bg-gray-100'"
+          >
+            <span>🛒</span>
+            <span>Cart</span>
+            @if (totalItems > 0) {
+              <span class="bg-orange-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                {{ totalItems }}
+              </span>
+            }
+          </a>
+
+          <a
+            routerLink="/orders"
+            class="px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
+            [ngClass]="isActive('/orders') ? 'bg-orange-50 text-orange-600' : 'text-gray-700 hover:bg-gray-100'"
+          >
+            <span>📦</span>
+            <span>Orders</span>
+          </a>
+
+          <a
+            routerLink="/admin/dishes"
+            class="px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
+            [ngClass]="isActive('/admin/dishes') || isActive('/admin/categories') ? 'bg-orange-50 text-orange-600' : 'text-gray-700 hover:bg-gray-100'"
+          >
+            <span>⚙️</span>
+            <span>Admin</span>
+          </a>
+        </div>
+
+        <div class="flex items-center space-x-2">
+          <a
+            routerLink="/login"
+            class="px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
+            [ngClass]="isActive('/login') ? 'bg-orange-50 text-orange-600' : 'text-gray-700 hover:bg-gray-100'"
+          >
+            <span>🔑</span>
+            <span class="hidden sm:inline">Login</span>
+          </a>
+
+          <a
+            routerLink="/register"
+            class="px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
+            [ngClass]="isActive('/register') ? 'bg-orange-600 text-white' : 'bg-orange-500 text-white hover:bg-orange-600'"
+          >
+            <span>➕</span>
+            <span class="hidden sm:inline">Register</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+</div>

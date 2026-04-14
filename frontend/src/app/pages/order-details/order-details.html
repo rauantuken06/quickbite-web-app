@@ -1,0 +1,81 @@
+<section class="details-page" *ngIf="order as currentOrder; else notFound">
+  <button class="back-btn" type="button" (click)="goBackToOrders()">
+    <span class="material-symbols-outlined">arrow_back</span>
+    <span>Back to Orders</span>
+  </button>
+
+  <article class="card order-header">
+    <div class="header-row">
+      <div>
+        <h1>Order #{{ currentOrder.id }}</h1>
+        <p class="order-date">{{ currentOrder.date }}</p>
+      </div>
+
+      <span class="status-badge" [ngClass]="getStatusClass(currentOrder.status)">
+        <span class="material-symbols-outlined status-icon">{{ getStatusIcon(currentOrder.status) }}</span>
+        <span>{{ currentOrder.status }}</span>
+      </span>
+    </div>
+
+    <div class="eta-box" *ngIf="currentOrder.estimatedDelivery">
+      <span class="material-symbols-outlined">schedule</span>
+      <span>Estimated: {{ currentOrder.estimatedDelivery }}</span>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="section-title">
+      <span class="material-symbols-outlined">storefront</span>
+      <h2>Restaurant</h2>
+    </div>
+    <p class="restaurant-name">{{ currentOrder.restaurantName }}</p>
+    <p class="restaurant-cuisine">{{ currentOrder.restaurantCuisine }} Cuisine</p>
+  </article>
+
+  <article class="card">
+    <h2 class="plain-title">Order Items</h2>
+
+    <div class="item-list">
+      <div class="item-row" *ngFor="let item of currentOrder.items; trackBy: trackByIndex">
+        <div>
+          <p class="item-name">{{ item.name }}</p>
+          <p class="item-meta">Quantity: {{ item.quantity }}</p>
+        </div>
+        <div class="item-right">
+          <p class="item-total">{{ getLineTotal(item.price, item.quantity) | currency }}</p>
+          <p class="item-meta">{{ item.price | currency }} each</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="total-row">
+      <span>Total</span>
+      <span class="grand-total">{{ currentOrder.total | currency }}</span>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="section-title">
+      <span class="material-symbols-outlined">location_on</span>
+      <h2>Delivery Address</h2>
+    </div>
+    <p class="body-text">{{ currentOrder.deliveryAddress }}</p>
+  </article>
+
+  <article class="card">
+    <div class="section-title">
+      <span class="material-symbols-outlined">credit_card</span>
+      <h2>Payment Method</h2>
+    </div>
+    <p class="body-text">{{ currentOrder.paymentMethod }}</p>
+  </article>
+</section>
+
+<ng-template #notFound>
+  <section class="details-page not-found">
+    <span class="material-symbols-outlined empty-icon">inventory_2</span>
+    <h2>Order Not Found</h2>
+    <p>The order you're looking for doesn't exist.</p>
+    <button class="primary-btn" type="button" (click)="goBackToOrders()">Back to Orders</button>
+  </section>
+</ng-template>
