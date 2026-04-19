@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import (
+    AddPaymentMethodView,
     RegisterView,
     RestaurantListCreateView,
     RestaurantDetailView,
@@ -26,6 +27,6 @@ urlpatterns = [
     path('addresses/', AddAddressView.as_view(), name='addresses'),
 
     path('user/', UserMeView.as_view(), name='user-me'),
-
+    path('payment-methods/', AddPaymentMethodView.as_view(), name='payment-methods'),
 
 ]

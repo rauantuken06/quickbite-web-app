@@ -3,7 +3,7 @@ from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Restaurant, Dish, Order, OrderItem, UserProfile
+from .models import Restaurant, Dish, Order, OrderItem, UserProfile, Address, PaymentMethod
 from .serializers import UserSerializer, RestaurantSerializer, DishSerializer, OrderSerializer
 
 
@@ -114,8 +114,6 @@ class OrderDetailView(generics.RetrieveAPIView):
         return Order.objects.filter(user=self.request.user)
     
 
-from .models import Address
-
 class AddAddressView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -144,3 +142,30 @@ class UserMeView(APIView):
 
     def get(self, request):
         return Response(UserSerializer(request.user).data)
+    
+
+class AddPaymentMethodView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        type_ = request.data.get('type')
+        details = request.data.get('details')
+
+        if not type_ or not details:
+            return Response({'error': 'type and details are required'}, status=400)
+
+        is_first = not PaymentMethod.objects.filter(user=request.user).exists()
+
+        payment = PaymentMethod.objects.create(
+            user=request.user,
+            type=type_,
+            details=details,
+            is_default=is_first
+        )
+
+        return Response({
+            'id': payment.id,
+            'type': payment.type,
+            'details': payment.details,
+            'is_default': payment.is_default
+        }, status=201)

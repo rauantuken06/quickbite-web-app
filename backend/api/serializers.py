@@ -21,7 +21,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ['name', 'phone', 'delivery_address', 'paymentMethods']
+        fields = ['name', 'phone', 'paymentMethods']
 
 
 
@@ -29,11 +29,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     addresses = AddressSerializer(many=True, read_only=True)
     paymentMethods = PaymentMethodSerializer(source='payment_methods', many=True, read_only=True)
+    name = serializers.CharField(source='profile.name', read_only=True)
+    phone = serializers.CharField(source='profile.phone', read_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'addresses', 'paymentMethods']
-
+        fields = ['id', 'username', 'email', 'name', 'phone', 'addresses', 'paymentMethods']
 
 class RestaurantSerializer(serializers.ModelSerializer):
     dishesId = serializers.PrimaryKeyRelatedField(
