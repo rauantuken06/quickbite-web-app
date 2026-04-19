@@ -5,7 +5,9 @@
         <div class="flex items-center gap-3">
           <a routerLink="/" class="flex items-center space-x-2">
             <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
-              <span class="text-white text-lg">🍴</span>
+              <span class="text-white text-lg">
+                <lucide-angular [img]="UtensilsCrossed"></lucide-angular>
+              </span>
             </div>
             <span class="text-xl font-bold text-gray-900">QuickBite</span>
           </a>
@@ -30,7 +32,7 @@
             class="px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
             [ngClass]="isActive('/cart') ? 'bg-orange-50 text-orange-600' : 'text-gray-700 hover:bg-gray-100'"
           >
-            <span>🛒</span>
+            <lucide-angular [img]="ShoppingCart" class="cart-logo"></lucide-angular>
             <span>Cart</span>
             @if (totalItems > 0) {
               <span class="bg-orange-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
@@ -44,7 +46,7 @@
             class="px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
             [ngClass]="isActive('/orders') ? 'bg-orange-50 text-orange-600' : 'text-gray-700 hover:bg-gray-100'"
           >
-            <span>📦</span>
+            <lucide-angular [img]="PackageOpen" class="package-logo"></lucide-angular>
             <span>Orders</span>
           </a>
 
@@ -53,7 +55,7 @@
             class="px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
             [ngClass]="isActive('/admin/dishes') || isActive('/admin/categories') ? 'bg-orange-50 text-orange-600' : 'text-gray-700 hover:bg-gray-100'"
           >
-            <span>⚙️</span>
+            <lucide-angular [img]="UserRoundCog" class="userroundcog-logo"></lucide-angular>
             <span>Admin</span>
           </a>
           <a
@@ -61,7 +63,7 @@
             class="px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
             [ngClass]="isActive('/account') ? 'bg-orange-50 text-orange-600' : 'text-gray-700 hover:bg-gray-100'"
           >
-            <span>👤</span>
+            <lucide-angular [img]="UserRound" class="userroundlogo-logo"></lucide-angular>
             <span>Account</span>
           </a>
         </div>
@@ -72,7 +74,7 @@
             class="px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
             [ngClass]="isActive('/login') ? 'bg-orange-50 text-orange-600' : 'text-gray-700 hover:bg-gray-100'"
           >
-            <span>🔑</span>
+            <lucide-angular [img]="KeyRound" class="keyround-info"></lucide-angular>
             <span class="hidden sm:inline">Login</span>
           </a>
 
@@ -81,7 +83,7 @@
             class="px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
             [ngClass]="isActive('/register') ? 'bg-orange-600 text-white' : 'bg-orange-500 text-white hover:bg-orange-600'"
           >
-            <span>➕</span>
+            <lucide-angular [img]="SquarePlus" class="squareplus-logo"></lucide-angular>
             <span class="hidden sm:inline">Register</span>
           </a>
         </div>
