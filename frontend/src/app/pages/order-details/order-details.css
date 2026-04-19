@@ -234,3 +234,62 @@
     align-items: flex-start;
   }
 }
+
+
+.clock-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.8rem;
+}
+
+.delivery-clock {
+  width: 260px;
+  height: 260px;
+}
+
+.clock-elapsed {
+  font-size: 24px;
+  font-weight: 800;
+  fill: var(--text);
+  font-family: 'Manrope', sans-serif;
+}
+
+.clock-total {
+  font-size: 10px;
+  fill: var(--muted);
+  font-family: 'Manrope', sans-serif;
+}
+
+.clock-label {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.game-card {
+  display: flex;
+  justify-content: center;
+}
+
+.game-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: none;
+  border-radius: 10px;
+  background: var(--primary);
+  color: #fff;
+  padding: 0.65rem 1.2rem;
+  font-weight: 700;
+  font-family: 'Manrope', sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  margin: 0.8rem auto 0;
+  justify-content: center;
+}
+.game-btn:hover {
+  background: var(--primary-hover);
+}

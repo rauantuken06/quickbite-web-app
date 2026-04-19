@@ -17,10 +17,38 @@
       </span>
     </div>
 
-    <div class="eta-box" *ngIf="currentOrder.estimatedDelivery">
-      <span class="material-symbols-outlined">schedule</span>
-      <span>Estimated: {{ currentOrder.estimatedDelivery }}</span>
-    </div>
+    <ng-container *ngIf="currentOrder.estimatedMinutes; else etaText">
+      <div class="clock-wrapper">
+        <svg viewBox="0 0 100 100" class="delivery-clock" aria-label="Delivery progress">
+          <circle cx="50" cy="50" r="40" fill="none" stroke="#f1f5f9" stroke-width="8"/>
+          <circle cx="50" cy="50" r="40" fill="none"
+                  stroke="#f97316" stroke-width="8"
+                  stroke-linecap="round"
+                  [attr.stroke-dasharray]="CIRCUMFERENCE"
+                  [attr.stroke-dashoffset]="getClockDashOffset()"
+                  transform="rotate(-90 50 50)"/>
+          <text x="50" y="45" text-anchor="middle" class="clock-elapsed">
+            {{ getElapsedMinutes() }}
+          </text>
+          <text x="50" y="62" text-anchor="middle" class="clock-total">
+            / {{ currentOrder.estimatedMinutes }} min
+          </text>
+        </svg>
+        <p class="clock-label">Estimated delivery</p>
+      </div>
+    </ng-container>
+
+    <ng-template #etaText>
+      <div class="eta-box" *ngIf="currentOrder.estimatedDelivery">
+        <span class="material-symbols-outlined">schedule</span>
+        <span>Estimated: {{ currentOrder.estimatedDelivery }}</span>
+      </div>
+    </ng-template>
+
+    <button class="game-btn" type="button" (click)="playGame()">
+      <span class="material-symbols-outlined">sports_esports</span>
+      <span>Play a Game</span>
+    </button>
   </article>
 
   <article class="card">
@@ -69,6 +97,7 @@
     </div>
     <p class="body-text">{{ currentOrder.paymentMethod }}</p>
   </article>
+  <app-dino-game *ngIf="showGame" (close)="showGame = false"></app-dino-game>
 </section>
 
 <ng-template #notFound>

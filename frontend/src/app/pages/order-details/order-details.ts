@@ -2,16 +2,19 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { mockOrders, Order, OrderStatus } from '../../dev_data/orders';
+import { DinoGame } from '../../components/dino-game/dino-game';
 
 @Component({
   selector: 'app-order-details',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, DinoGame],
   templateUrl: './order-details.html',
   styleUrl: './order-details.css'
 })
 export class OrderDetails implements OnInit {
+  readonly CIRCUMFERENCE = 2 * Math.PI * 40;
   order: Order | undefined;
+  showGame = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -57,5 +60,24 @@ export class OrderDetails implements OnInit {
 
   trackByIndex(index: number): number {
     return index;
+  }
+
+  getClockProgress(): number {
+    const o = this.order;
+    if (!o?.estimatedMinutes || !o?.placedAtTimestamp) return 0;
+    const elapsed = (Date.now() - o.placedAtTimestamp) / 60_000;
+    return Math.min(elapsed / o.estimatedMinutes, 1);
+  }
+
+  getClockDashOffset(): number {
+    return this.CIRCUMFERENCE * (1 - this.getClockProgress());
+  }
+
+  getElapsedMinutes(): number {
+    if (!this.order?.placedAtTimestamp) return 0;
+    return Math.floor((Date.now() - this.order.placedAtTimestamp) / 60_000);
+  }
+  playGame(): void{
+    this.showGame = true;
   }
 }

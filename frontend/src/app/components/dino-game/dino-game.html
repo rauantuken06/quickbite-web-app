@@ -1,0 +1,14 @@
+<div class="game-overlay">
+  <div class="game-container">
+    <div class="game-header">
+      <span class="game-title"> Dino Run</span>
+      <button class="close-btn" type="button" (click)="close.emit()" aria-label="Close game">✕</button>
+    </div>
+    <canvas #gameCanvas class="game-canvas"></canvas>
+    <div class="game-controls">
+      <button class="jump-btn" type="button" (click)="handleAction()">
+        {{ gameState === 'playing' ? '▲  Jump' : gameState === 'over' ? '↺  Restart' : '▶  Start' }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterOutlet, Router } from '@angular/router';
+import { mockOrders } from './dev_data/orders';
+
 
 @Component({
   selector: 'app-root',
@@ -11,6 +13,7 @@ import { RouterLink, RouterOutlet, Router } from '@angular/router';
 })
 export class App {
   totalItems = 0;
+  totalOrders = mockOrders.length;
 
   constructor(public router: Router) {}
 

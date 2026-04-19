@@ -2,12 +2,19 @@
   <nav class="bg-white shadow-sm sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
-        <a routerLink="/" class="flex items-center space-x-2">
-          <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
-            <span class="text-white text-lg">🍴</span>
+        <div class="flex items-center gap-3">
+          <a routerLink="/" class="flex items-center space-x-2">
+            <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
+              <span class="text-white text-lg">🍴</span>
+            </div>
+            <span class="text-xl font-bold text-gray-900">QuickBite</span>
+          </a>
+
+          <div class="hidden sm:flex flex-col items-start pl-3 border-l border-gray-200 leading-tight">
+            <span class="text-xs text-gray-400 uppercase tracking-wide">Total Orders</span>
+            <span class="text-sm font-bold text-orange-600">{{ totalOrders }}</span>
           </div>
-          <span class="text-xl font-bold text-gray-900">QuickBite</span>
-        </a>
+        </div>
 
         <div class="hidden md:flex items-center space-x-1">
           <a

@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CartItem, CartService } from '../../services/cart.service';
+import { mockOrders, Order } from '../../dev_data/orders';
 import { LucideAngularModule, Minus, Plus, Trash2 } from 'lucide-angular';
 
 @Component({
@@ -13,6 +14,7 @@ import { LucideAngularModule, Minus, Plus, Trash2 } from 'lucide-angular';
 })
 export class Cart {
   private cartService = inject(CartService);
+  private router = inject(Router);
 
   deliveryFee = 3.99;
 
@@ -37,14 +39,31 @@ export class Cart {
     this.cartService.clearCart();
   }
 
-  handlePlaceOrder(): void {
+   handlePlaceOrder(): void {
     if (this.items.length === 0) {
       alert('Your cart is empty');
       return;
     }
 
-    alert('Order placed successfully!');
+    const newId = Math.max(...mockOrders.map(o => o.id)) + 1;
+    const newOrder: Order = {
+      id: newId,
+      date: new Date().toISOString().split('T')[0],
+      items: this.items.map(i => ({ name: i.name, price: i.price, quantity: i.quantity })),
+      total: this.getFinalTotal(),
+      status: 'pending',
+      restaurantName: 'Bella Italia',
+      restaurantCuisine: 'Italian',
+      deliveryAddress: '123 Main Street, Apt 4B, New York, NY 10001',
+      paymentMethod: 'Credit Card',
+      estimatedDelivery: '30 minutes',
+      estimatedMinutes: 30,
+      placedAtTimestamp: Date.now(),
+    };
+
+    mockOrders.push(newOrder);
     this.clearCart();
+    this.router.navigate(['/orders', newOrder.id]);
   }
 
   getFinalTotal(): number {

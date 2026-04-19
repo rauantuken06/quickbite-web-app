@@ -17,6 +17,8 @@ export interface Order {
 	deliveryAddress: string;
 	paymentMethod: string;
 	estimatedDelivery?: string;
+	estimatedMinutes?: number;
+	placedAtTimestamp?: number;
 }
 
 export const mockOrders: Order[] = [
@@ -62,7 +64,9 @@ export const mockOrders: Order[] = [
 		restaurantCuisine: 'Italian',
 		deliveryAddress: '123 Main Street, Apt 4B, New York, NY 10001',
 		paymentMethod: 'Credit Card (****1234)',
-		estimatedDelivery: '15-20 minutes'
+		estimatedDelivery: '15-20 minutes',
+		estimatedMinutes: 20,
+		placedAtTimestamp: Date.now() - 5 * 60 * 1000,
 	},
 	{
 		id: 1004,
@@ -77,6 +81,8 @@ export const mockOrders: Order[] = [
 		restaurantCuisine: 'Italian',
 		deliveryAddress: '123 Main Street, Apt 4B, New York, NY 10001',
 		paymentMethod: 'Credit Card (****1234)',
-		estimatedDelivery: 'Waiting for restaurant confirmation'
+		estimatedDelivery: 'Waiting for restaurant confirmation',
+		estimatedMinutes: 30,
+		placedAtTimestamp: Date.now() - 2 * 60 * 1000,
 	}
 ];
