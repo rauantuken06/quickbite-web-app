@@ -185,7 +185,8 @@
 .dish-grid {
     display: grid;
     gap: 14px;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(284px, 284px));
+    justify-content: start;
 }
 
 .dish-card {
@@ -193,6 +194,9 @@
     border: 1px solid #eee2d5;
     border-radius: 16px;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 420px;
 }
 
 .dish-image-wrap {
@@ -217,6 +221,10 @@
 .dish-body p {
     color: #6b7280;
     margin: 0 0 10px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .dish-footer {
@@ -276,29 +284,29 @@
 }
 
 swiper-container {
-    --swiper-navigation-color: #111111;
-    --swiper-navigation-size: 18px;
+  --swiper-navigation-size: 22px;
+  --swiper-navigation-color: #ffffff;
 }
 
 swiper-container::part(button-prev),
 swiper-container::part(button-next) {
-    background: #ffffff;
-    border: 1px solid #111111;
-    border-radius: 999px;
-    width: 40px;
-    height: 40px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  width: 40px;
+  height: 40px;
+  color: #ffffff !important;
+}
+
+swiper-container::part(button-prev-svg),
+swiper-container::part(button-next-svg) {
+  fill: none !important;
+  stroke: #ffffff !important;
+  stroke-width: 2.5px;
 }
 
 swiper-container::part(button-prev):hover,
 swiper-container::part(button-next):hover {
-    background: #f3f4f6;
-}
-
-swiper-container::part(button-prev) {
-    left: 10px;
-}
-
-swiper-container::part(button-next) {
-    right: 10px;
+  background: transparent !important;
+  border: none !important;
 }
