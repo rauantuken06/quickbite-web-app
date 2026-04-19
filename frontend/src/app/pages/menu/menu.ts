@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Dish, dishes } from '../../dev_data/dishes';
 import { categories } from '../../dev_data/categories';
 import { MockData } from '../../services/mock-data';
 import { Restaurant } from '../../dev_data/restaurant';
-import { RestaurantCarousel } from '../../components/RestaurantCarousel/RestaurantCarousel';
+
+
 
 interface CartItem {
   id: number;
@@ -19,9 +20,11 @@ interface CartItem {
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, RestaurantCarousel],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './menu.html',
-  styleUrl: './menu.css'
+  styleUrl: './menu.css',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+
 })
 export class Menu {
   restaurants: Restaurant[] = [];

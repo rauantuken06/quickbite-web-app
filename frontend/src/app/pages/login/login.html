@@ -1,1 +1,32 @@
-<p>login works!</p>
+<div class="min-h-screen flex items-center justify-center px-4 py-12">
+    <div class="w-full max-w-md">
+        <div class="text-center mb-8">
+            <div
+                class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl mb-4">
+                <span class="icon-utensils">🍽️</span> </div>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
+            <p class="text-gray-600">Sign in to your QuickBite account</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+            <form (submit)="handleSubmit($event)" class="space-y-6">
+                <div *ngIf="error" class="alert alert-danger flex items-center gap-2"> <span
+                        class="icon-alert">⚠️</span> <span>{{ error }}</span> </div>
+                <div class="space-y-2"> <label for="username" class="block font-medium">Username</label> <input
+                        id="username" type="text" placeholder="Enter your username" [(ngModel)]="username"
+                        name="username" class="h-11 w-full border rounded px-3" /> </div>
+                <div class="space-y-2"> <label for="password" class="block font-medium">Password</label> <input
+                        id="password" type="password" placeholder="Enter your password" [(ngModel)]="password"
+                        name="password" class="h-11 w-full border rounded px-3" /> </div> <button type="submit"
+                    class="w-full h-11 bg-orange-500 hover:bg-orange-600 text-white rounded font-semibold"> Sign In
+                </button>
+            </form>
+            <div class="mt-6 text-center">
+                <p class="text-sm text-gray-600"> Don't have an account? <a routerLink="/register"
+                        class="text-orange-600 hover:text-orange-700 font-medium">Sign up</a> </p>
+            </div>
+            <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+                <p class="text-xs text-blue-800"> <strong>Demo:</strong> username: demo, password: demo123 </p>
+            </div>
+        </div>
+    </div>
+</div>

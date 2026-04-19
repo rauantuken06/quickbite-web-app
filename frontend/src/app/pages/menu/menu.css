@@ -274,3 +274,31 @@
         align-items: stretch;
     }
 }
+
+swiper-container {
+    --swiper-navigation-color: #111111;
+    --swiper-navigation-size: 18px;
+}
+
+swiper-container::part(button-prev),
+swiper-container::part(button-next) {
+    background: #ffffff;
+    border: 1px solid #111111;
+    border-radius: 999px;
+    width: 40px;
+    height: 40px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+swiper-container::part(button-prev):hover,
+swiper-container::part(button-next):hover {
+    background: #f3f4f6;
+}
+
+swiper-container::part(button-prev) {
+    left: 10px;
+}
+
+swiper-container::part(button-next) {
+    right: 10px;
+}
