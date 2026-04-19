@@ -84,7 +84,7 @@
 }
 
 .meta {
-    margin-top: 10px;
+    margin-top: 25px;
     display: flex;
     justify-content: space-between;
     color: #374151;
@@ -309,4 +309,18 @@ swiper-container::part(button-prev):hover,
 swiper-container::part(button-next):hover {
   background: transparent !important;
   border: none !important;
+}
+
+.star {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.time {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
 }

@@ -6,6 +6,7 @@ import { Dish, dishes } from '../../dev_data/dishes';
 import { categories } from '../../dev_data/categories';
 import { MockData } from '../../services/mock-data';
 import { Restaurant } from '../../dev_data/restaurant';
+import { LucideAngularModule, Star, Clock } from 'lucide-angular';
 
 
 
@@ -20,13 +21,16 @@ interface CartItem {
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule],
   templateUrl: './menu.html',
   styleUrl: './menu.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 
 })
 export class Menu {
+  readonly Star = Star;
+  readonly Clock = Clock;
+
   restaurants: Restaurant[] = [];
   selectedRestaurant: Restaurant | null = null;
   selectedCategory = 'All';

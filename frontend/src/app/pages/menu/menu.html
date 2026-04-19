@@ -20,8 +20,14 @@
                         <p class="description">{{ restaurant.description }}</p>
 
                         <div class="meta">
-                            <span>★ {{ restaurant.rating }}</span>
-                            <span>⏱ {{ restaurant.deliveryTime }}</span>
+                            <div class="star">
+                                <lucide-angular [img]="Star"></lucide-angular>
+                                <span>{{ restaurant.rating }}</span>
+                            </div>
+                            <div class="time">
+                                <lucide-angular [img]="Clock"></lucide-angular>
+                                <span>{{ restaurant.deliveryTime }}</span>
+                            </div>
                         </div>
                     </div>
                 </article>
