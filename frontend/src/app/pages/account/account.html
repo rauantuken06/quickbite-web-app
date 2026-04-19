@@ -7,7 +7,7 @@
   <article class="card">
     <div class="card-head">
       <div class="title-wrap">
-        <lucide-angular [img]="SquareUserRound"></lucide-angular>
+        <lucide-angular [img]="SquareUserRound" class="square-user-round"></lucide-angular>
         <h2>Personal Information</h2>
       </div>
       <button class="btn btn-outline" type="button">Edit</button>
@@ -21,14 +21,14 @@
       <div>
         <label>Email Address</label>
         <div class="email-info">
-          <lucide-angular [img]="Mails"></lucide-angular>
+          <lucide-angular [img]="Mails" class="mails"></lucide-angular>
           <p> {{ user.email }}</p>
         </div>
       </div>
       <div>
         <label>Phone Number</label>
         <div class="phone-info">
-          <lucide-angular [img]="PhoneCall"></lucide-angular>
+          <lucide-angular [img]="PhoneCall" class="phone-call"></lucide-angular>
           <p> {{ user.phone }}</p>
         </div>
       </div>
@@ -38,7 +38,7 @@
   <article class="card">
     <div class="card-head">
       <div class="title-wrap">
-        <lucide-angular [img]="MapPinHouse"></lucide-angular>
+        <lucide-angular [img]="MapPinHouse" class="map-pin-house"></lucide-angular>
         <h2>Delivery Address</h2>
       </div>
       <button class="btn btn-outline" type="button">Edit</button>
@@ -52,7 +52,7 @@
   <article class="card">
     <div class="card-head">
       <div class="title-wrap">
-        <lucide-angular [img]="BadgeDollarSign"></lucide-angular>
+        <lucide-angular [img]="BadgeDollarSign" class="badge-dollar-sign"></lucide-angular>
         <h2>Payment Methods</h2>
       </div>
       <button class="btn btn-primary" type="button">Add New</button>
@@ -61,7 +61,7 @@
     <div class="payment-list">
       <div class="payment-item" *ngFor="let method of user.paymentMethods; trackBy: trackByPaymentId">
         <div class="payment-left">
-          <lucide-angular [img]="CreditCard"></lucide-angular>
+          <lucide-angular [img]="CreditCard" class="credit-card"></lucide-angular>
           <div>
             <div class="payment-title-row">
               <p class="payment-title">{{ method.type }}</p>

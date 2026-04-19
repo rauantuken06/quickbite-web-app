@@ -249,3 +249,27 @@
   align-items: center;
   gap: 10px;
 }
+
+.square-user-round {
+  color: orangered
+}
+
+.mails {
+  color: orangered;
+}
+
+.phone-call {
+  color: orangered
+}
+
+.map-pin-house {
+  color: orangered;
+}
+
+.badge-dollar-sign {
+  color: orangered;
+}
+
+.credit-card {
+  color: rgb(81, 140, 241);
+}
