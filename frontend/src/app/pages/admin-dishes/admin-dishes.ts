@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -13,15 +13,17 @@ import { Dish } from '../../dev_data/dishes';
   templateUrl: './admin-dishes.html',
   styleUrl: './admin-dishes.css',
 })
-export class AdminDishes {
+export class AdminDishes implements OnInit {
   private dishService = inject(DishService);
 
   categories = ['Pizza', 'Burger', 'Drinks', 'Desserts', 'Salads'];
   cuisines = ['Italian', 'American', 'Asian', 'Mexican'];
   restaurantIds = [1, 2, 3];
 
+  dishes: Dish[] = [];
   isDialogOpen = false;
   editingDish: Dish | null = null;
+  loading = false;
 
   formData = {
     name: '',
@@ -33,8 +35,23 @@ export class AdminDishes {
     image: '',
   };
 
-  get dishes(): Dish[] {
-    return this.dishService.getAll();
+  ngOnInit(): void {
+    this.loadDishes();
+  }
+
+  loadDishes(): void {
+    this.loading = true;
+
+    this.dishService.getAll().subscribe({
+      next: (data) => {
+        this.dishes = data;
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Failed to load dishes:', err);
+        this.loading = false;
+      }
+    });
   }
 
   openDialog(dish?: Dish): void {
@@ -122,15 +139,30 @@ export class AdminDishes {
         image: this.formData.image
       };
 
-      this.dishService.addDish(newDish);
-      alert('Dish added successfully');
+      this.dishService.addDish(newDish).subscribe({
+        next: () => {
+          alert('Dish added successfully');
+          this.closeDialog();
+          this.loadDishes();
+        },
+        error: (err) => {
+          console.error('Failed to add dish:', err);
+          alert('Failed to add dish');
+        }
+      });
     }
-
-    this.closeDialog();
   }
 
   deleteDish(id: number): void {
-    this.dishService.delete(id);
-    alert('Dish deleted successfully');
+    this.dishService.delete(id).subscribe({
+      next: () => {
+        alert('Dish deleted successfully');
+        this.loadDishes();
+      },
+      error: (err) => {
+        console.error('Failed to delete dish:', err);
+        alert('Failed to delete dish');
+      }
+    });
   }
 }

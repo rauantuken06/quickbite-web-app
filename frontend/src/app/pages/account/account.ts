@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { mockUser, PaymentMethod } from '../../dev_data/user';
+import { LucideAngularModule, SquareUserRound, Mails, PhoneCall, Phone, MapPinHouse, BadgeDollarSign, CreditCard, PencilLine } from 'lucide-angular';
 
 @Component({
   selector: 'app-account',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LucideAngularModule],
   templateUrl: './account.html',
   styleUrl: './account.css'
 })
@@ -22,4 +23,12 @@ export class Account {
   trackByPaymentId(_: number, method: PaymentMethod): number {
     return method.id;
   }
+
+  readonly SquareUserRound = SquareUserRound;
+  readonly Mails = Mails;
+  readonly PhoneCall = PhoneCall;
+  readonly MapPinHouse = MapPinHouse;
+  readonly BadgeDollarSign = BadgeDollarSign;
+  readonly CreditCard = CreditCard;
+  readonly PencilLine = PencilLine
 }

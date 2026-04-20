@@ -124,6 +124,7 @@
   align-items: center;
   gap: 0.75rem;
   min-width: 0;
+  margin-left: 10px;
 }
 
 .payment-icon {
@@ -212,9 +213,12 @@
 }
 
 .btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-color: var(--border);
-  width: 34px;
-  height: 34px;
+  width: 39px;
+  height: 39px;
   padding: 0;
 }
 
@@ -232,4 +236,40 @@
   .payment-actions {
     width: 100%;
   }
+}
+
+.email-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.phone-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.square-user-round {
+  color: orangered
+}
+
+.mails {
+  color: orangered;
+}
+
+.phone-call {
+  color: orangered
+}
+
+.map-pin-house {
+  color: orangered;
+}
+
+.badge-dollar-sign {
+  color: orangered;
+}
+
+.credit-card {
+  color: rgb(81, 140, 241);
 }
