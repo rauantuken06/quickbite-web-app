@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { mockOrders, Order, OrderStatus } from '../../dev_data/orders';
+import { Order, OrderService, OrderStatus } from '../../services/order.service';
+import { Auth } from '../../services/auth';
+
+
 
 @Component({
   selector: 'app-orders',
@@ -10,11 +13,37 @@ import { mockOrders, Order, OrderStatus } from '../../dev_data/orders';
   templateUrl: './orders.html',
   styleUrl: './orders.css'
 })
-export class Orders {
-  orders: Order[] = mockOrders;
+export class Orders implements OnInit {
+  orders: Order[] = [];
   expandedOrder: number | null = null;
+  loading = false;
+  showAuthModal = false;
 
-  constructor(private router: Router) {}
+
+
+  constructor(
+    private router: Router,
+    private orderService: OrderService,
+    private auth: Auth
+  ) { }
+
+  ngOnInit(): void {
+    if (!this.auth.isLoggedIn()) {
+      this.showAuthModal = true;
+      return;
+    }
+    this.loading = true;
+    this.orderService.getAll().subscribe({
+      next: (rows) => {
+        this.orders = rows;
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Failed to load orders', err);
+        this.loading = false;
+      }
+    });
+  }
 
   toggleExpand(orderId: number): void {
     this.expandedOrder = this.expandedOrder === orderId ? null : orderId;
@@ -53,7 +82,7 @@ export class Orders {
   }
 
   getItemCountText(count: number): string {
-    return `${count} item${count > 1 ? 's' : ''}`;
+    return count + ' item' + (count > 1 ? 's' : '');
   }
 
   getLineTotal(price: number, quantity: number): number {
@@ -66,5 +95,10 @@ export class Orders {
 
   trackByIndex(index: number): number {
     return index;
+  }
+  
+  closeModal(): void {
+    this.showAuthModal = false;
+    this.router.navigate(['/menu']);
   }
 }

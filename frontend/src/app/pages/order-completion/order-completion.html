@@ -1,0 +1,65 @@
+<div class="min-h-screen bg-gray-50 py-8 px-4">
+  <div class="max-w-2xl mx-auto space-y-6">
+
+    <a routerLink="/cart" class="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 text-sm">
+      ← Back to Cart
+    </a>
+
+    <div class="bg-white rounded-xl border border-gray-200 p-6">
+      <h2 class="text-lg font-bold text-gray-900 mb-4">Order Items</h2>
+      <div *ngFor="let item of items" class="flex justify-between py-2 border-b border-gray-100 last:border-0">
+        <span class="text-gray-700">{{ item.quantity }}x {{ item.name }}</span>
+        <span class="font-medium text-gray-900">{{ (item.price * item.quantity) | currency }}</span>
+      </div>
+      <div class="flex justify-between mt-3 text-sm text-gray-500">
+        <span>Subtotal</span>
+        <span>{{ subtotal | currency }}</span>
+      </div>
+      <div class="flex justify-between text-sm text-gray-500">
+        <span>Delivery Fee</span>
+        <span>{{ deliveryFee | currency }}</span>
+      </div>
+      <div class="flex justify-between mt-2 text-lg font-bold text-orange-600">
+        <span>Total</span>
+        <span>{{ total | currency }}</span>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-xl border border-gray-200 p-6">
+      <h2 class="text-lg font-bold text-gray-900 mb-4">Delivery Address</h2>
+      <div *ngFor="let addr of addresses" class="flex items-center gap-3 mb-2">
+        <input type="radio" [id]="'addr-' + addr.id" name="address" [value]="addr.id" [(ngModel)]="selectedAddressId" (change)="useNewAddress = false" />
+        <label [for]="'addr-' + addr.id" class="text-gray-700 cursor-pointer">
+          {{ addr.address }}
+          <span *ngIf="addr.is_default" class="text-xs text-orange-500 ml-1">(Default)</span>
+        </label>
+      </div>
+      <div class="flex items-center gap-3 mt-3">
+        <input type="radio" id="addr-new" name="address" [value]="-1" [(ngModel)]="selectedAddressId" (change)="useNewAddress = true" />
+        <label for="addr-new" class="text-gray-700 cursor-pointer">Use a different address</label>
+      </div>
+      <input *ngIf="useNewAddress" type="text" [(ngModel)]="newAddress" placeholder="Enter delivery address" class="mt-2 w-full border border-gray-300 rounded-lg px-3 h-10 text-sm" />
+    </div>
+
+    <div class="bg-white rounded-xl border border-gray-200 p-6">
+      <h2 class="text-lg font-bold text-gray-900 mb-4">Payment Method</h2>
+      <div *ngFor="let pay of paymentMethods" class="flex items-center gap-3 mb-2">
+        <input type="radio" [id]="'pay-' + pay.id" name="payment" [value]="pay.id" [(ngModel)]="selectedPaymentId" (change)="useNewPayment = false" />
+        <label [for]="'pay-' + pay.id" class="text-gray-700 cursor-pointer">
+          {{ pay.type }} - {{ pay.details }}
+          <span *ngIf="pay.is_default" class="text-xs text-orange-500 ml-1">(Default)</span>
+        </label>
+      </div>
+      <div class="flex items-center gap-3 mt-3">
+        <input type="radio" id="pay-new" name="payment" [value]="-1" [(ngModel)]="selectedPaymentId" (change)="useNewPayment = true" />
+        <label for="pay-new" class="text-gray-700 cursor-pointer">Use a different payment</label>
+      </div>
+      <input *ngIf="useNewPayment" type="text" [(ngModel)]="newPayment" placeholder="e.g. Visa ****4242" class="mt-2 w-full border border-gray-300 rounded-lg px-3 h-10 text-sm" />
+    </div>
+
+    <button (click)="confirmOrder()" [disabled]="placing" class="w-full h-12 bg-orange-500 hover:bg-orange-600 disabled:opacity-50 text-white rounded-xl font-semibold text-base">
+      {{ placing ? 'Placing Order...' : 'Confirm and Place Order' }}
+    </button>
+
+  </div>
+</div>

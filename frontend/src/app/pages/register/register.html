@@ -1,10 +1,49 @@
-<div class="register-page">
-    <div class="register-card-wrap">
-        <div class="brand-block">
-            <div class="logo-box"><lucide-angular [img]="UtensilsCrossed"></lucide-angular></div>
-            <h1>Create Account</h1>
-            <p>Join QuickBite and start ordering</p>
+<div class="min-h-screen flex items-center justify-center px-4 py-12">
+    <div class="w-full max-w-md">
+        <div class="text-center mb-8">
+            <div
+                class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl mb-4">
+                <span><lucide-angular [img]="UtensilsCrossed"></lucide-angular></span>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
+            <p class="text-gray-600">Join QuickBite and start ordering</p>
         </div>
-
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+            <form (submit)="handleSubmit($event)" class="space-y-6">
+                <div *ngIf="error"
+                    class="bg-red-50 border border-red-200 text-red-700 rounded p-3 flex items-center gap-2">
+                    <span>{{ error }}</span>
+                </div>
+                <div class="space-y-2">
+                    <label for="username" class="block font-medium">Username</label>
+                    <input id="username" type="text" placeholder="Choose a username" [(ngModel)]="username"
+                        name="username" class="h-11 w-full border rounded px-3" required />
+                </div>
+                <div class="space-y-2">
+                    <label for="email" class="block font-medium">Email</label>
+                    <input id="email" type="email" placeholder="Enter your email" [(ngModel)]="email" name="email"
+                        class="h-11 w-full border rounded px-3" required />
+                </div>
+                <div class="space-y-2">
+                    <label for="password" class="block font-medium">Password</label>
+                    <input id="password" type="password" placeholder="Create a password" [(ngModel)]="password"
+                        name="password" class="h-11 w-full border rounded px-3" required />
+                </div>
+                <div class="space-y-2">
+                    <label for="confirmPassword" class="block font-medium">Confirm Password</label>
+                    <input id="confirmPassword" type="password" placeholder="Repeat your password"
+                        [(ngModel)]="confirmPassword" name="confirmPassword" class="h-11 w-full border rounded px-3"
+                        required />
+                </div>
+                <button type="submit" [disabled]="loading"
+                    class="w-full h-11 bg-orange-500 hover:bg-orange-600 text-white rounded font-semibold">
+                    {{ loading ? 'Creating...' : 'Create Account' }}
+                </button>
+            </form>
+            <div class="mt-6 text-center">
+                <p class="text-sm text-gray-600">Already have an account? <a routerLink="/login"
+                        class="text-orange-600 hover:text-orange-700 font-medium">Sign in</a></p>
+            </div>
+        </div>
     </div>
 </div>

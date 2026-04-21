@@ -1,9 +1,17 @@
-import { Injectable, inject } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { dishes } from "../dev_data/dishes";
-import { Dish } from "../dev_data/dishes";
-import { Observable, of } from 'rxjs';
-import { catchError, map } from "rxjs/operators";
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { map, Observable } from 'rxjs';
+
+export interface Dish {
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    category: string;
+    cuisine: string;
+    restaurantId: number;
+    image: string;
+}
 
 interface ApiDish {
     id: number;
@@ -13,7 +21,7 @@ interface ApiDish {
     category: string;
     cuisine: string;
     restaurant: number;
-    image: string;
+    images?: string[];
 }
 
 @Injectable({
@@ -21,53 +29,65 @@ interface ApiDish {
 })
 export class DishService {
     private http = inject(HttpClient);
-
-    private apiUrl = 'http://127.0.0.1:8000/api/dishes/';
-
-    private _dishes: Dish[] = [...dishes];
+    private apiUrl = 'http://localhost:8000/api/dishes/';
 
     getAll(): Observable<Dish[]> {
         return this.http.get<ApiDish[]>(this.apiUrl).pipe(
-            map((apiDishes) => 
-                apiDishes.map((d) => ({
+            map((rows) =>
+                rows.map((d) => ({
                     id: d.id,
                     name: d.name,
                     description: d.description,
                     price: d.price,
-                    category: d.category,
-                    cuisine: d.cuisine,
+                    category: this.toTitle(d.category),
+                    cuisine: this.toTitle(d.cuisine),
                     restaurantId: d.restaurant,
-                    image: d.image
+                    image: d.images && d.images.length ? d.images[0] : 'https://placehold.co/600x600?text=Dish'
                 }))
-            ),
-            catchError((err) => {
-                console.error('API failed, fallback to dev_data', err);
-                return of(this._dishes);
-            })
+            )
         );
     }
 
     getById(id: number): Observable<Dish | undefined> {
         return this.getAll().pipe(
-            map((dishes) => dishes.find(d => d.id === id))
+            map((rows) => rows.find((x) => x.id === id))
         );
     }
 
-    getByCategory(category: string): Observable<Dish[]> {
-        return this.getAll().pipe(
-            map((dishes) => dishes.filter(d => d.category === category))
-        );
+    addDish(dish: Dish): Observable<unknown> {
+        const payload = {
+            name: dish.name,
+            description: dish.description,
+            price: dish.price,
+            category: dish.category.toLowerCase(),
+            cuisine: dish.cuisine.toLowerCase(),
+            restaurant: dish.restaurantId,
+            images: dish.image ? [dish.image] : [],
+            is_available: true
+        };
+        return this.http.post(this.apiUrl, payload);
     }
 
-    addDish(dish: Dish): Observable<any> {
-        return this.http.post(this.apiUrl, dish);
+    update(dish: Dish): Observable<unknown> {
+        const payload = {
+            name: dish.name,
+            description: dish.description,
+            price: dish.price,
+            category: dish.category.toLowerCase(),
+            cuisine: dish.cuisine.toLowerCase(),
+            restaurant: dish.restaurantId,
+            images: dish.image ? [dish.image] : [],
+            is_available: true
+        };
+        return this.http.put(this.apiUrl + dish.id + '/', payload);
     }
 
-    update(updated: Dish): Observable<any> {
-        return this.http.put(`${this.apiUrl}${updated.id}/`, updated);
+    delete(id: number): Observable<unknown> {
+        return this.http.delete(this.apiUrl + id + '/');
     }
 
-    delete(id: number): Observable<any> {
-        return this.http.delete(`${this.apiUrl}${id}/`);
+    private toTitle(value: string): string {
+        if (!value) return '';
+        return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
     }
 }

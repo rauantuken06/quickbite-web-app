@@ -51,6 +51,7 @@
           </a>
 
           <a
+            *ngIf = "isLoggedIn()"
             routerLink="/admin/dishes"
             class="px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
             [ngClass]="isActive('/admin/dishes') || isActive('/admin/categories') ? 'bg-orange-50 text-orange-600' : 'text-gray-700 hover:bg-gray-100'"
@@ -59,6 +60,7 @@
             <span>Admin</span>
           </a>
           <a
+            *ngIf = "isLoggedIn()"
             routerLink="/account"
             class="px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
             [ngClass]="isActive('/account') ? 'bg-orange-50 text-orange-600' : 'text-gray-700 hover:bg-gray-100'"
@@ -70,6 +72,7 @@
 
         <div class="flex items-center space-x-2">
           <a
+            *ngIf = "!isLoggedIn()"
             routerLink="/login"
             class="px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
             [ngClass]="isActive('/login') ? 'bg-orange-50 text-orange-600' : 'text-gray-700 hover:bg-gray-100'"
@@ -79,6 +82,7 @@
           </a>
 
           <a
+           *ngIf = "!isLoggedIn()"
             routerLink="/register"
             class="px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
             [ngClass]="isActive('/register') ? 'bg-orange-600 text-white' : 'bg-orange-500 text-white hover:bg-orange-600'"

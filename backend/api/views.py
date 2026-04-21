@@ -2,9 +2,13 @@ from django.contrib.auth.models import User
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 from .models import Restaurant, Dish, Order, OrderItem, UserProfile, Address, PaymentMethod
 from .serializers import UserSerializer, RestaurantSerializer, DishSerializer, OrderSerializer
+from .consumers import user_group_name
 
 
 class RegisterView(APIView):
@@ -102,6 +106,14 @@ class OrderListCreateView(generics.ListCreateAPIView):
         order.total = total
         order.save()
 
+        # Broadcast updated order count to the user's WebSocket group
+        total_orders = Order.objects.filter(user=request.user).count()
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            user_group_name(request.user.id),
+            {"type": "order_count_update", "total_orders": total_orders},
+        )
+
         serializer = self.get_serializer(order)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -169,3 +181,18 @@ class AddPaymentMethodView(APIView):
             'details': payment.details,
             'is_default': payment.is_default
         }, status=201)
+
+class LogoutView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request):
+        refresh_token = request.data.get('refresh')
+        if not refresh_token:
+            return Response({'error': 'refresh token is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response({'message': 'Logged out successfully'}, status=status.HTTP_205_RESET_CONTENT)
+        except TokenError:
+            return Response({'error': 'Invalid or expired refresh token'}, status=status.HTTP_400_BAD_REQUEST)

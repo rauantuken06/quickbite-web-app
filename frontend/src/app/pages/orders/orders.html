@@ -1,3 +1,21 @@
+@if (showAuthModal) {
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-xl p-8 max-w-sm w-full mx-4 text-center shadow-xl">
+    <h2 class="text-xl font-bold text-gray-900 mb-2">Sign in Required</h2>
+    <p class="text-gray-600 mb-6">You need to register or log in to view your orders.</p>
+    <div class="flex flex-col gap-3">
+      <a routerLink="/login"
+        class="w-full h-11 bg-orange-500 hover:bg-orange-600 text-white rounded font-semibold flex items-center justify-center">Sign
+        In</a>
+      <a routerLink="/register"
+        class="w-full h-11 border border-orange-500 text-orange-500 hover:bg-orange-50 rounded font-semibold flex items-center justify-center">Create
+        Account</a>
+      <button (click)="closeModal()" class="text-gray-500 hover:text-gray-700 text-sm mt-1">Go back to Menu</button>
+    </div>
+  </div>
+</div>
+}
+
 <section class="orders-page">
   <header class="page-header">
     <h1>Your Orders</h1>

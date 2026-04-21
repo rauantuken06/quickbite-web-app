@@ -9,15 +9,17 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const token = authService.getToken();
 
-  const authReq = token ? req.clone({setHeaders: {Authorization: `Token ${token}`}}):req;
+  const authReq = token
+    ? req.clone({ setHeaders: { Authorization: `Bearer ${ token }` } })
+: req;
 
-  return next(authReq).pipe(
-    catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) {
-        authService.logout();
-        router.navigate(['/login']);
-      }
-      return throwError(() => error);
-    })
-  );
+return next(authReq).pipe(
+  catchError((error: HttpErrorResponse) => {
+    if (error.status === 401) {
+      authService.logout(false);
+      router.navigate(['/login']);
+    }
+    return throwError(() => error);
+  })
+);
 };

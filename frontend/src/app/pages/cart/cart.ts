@@ -1,22 +1,28 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { CartItem, CartService } from '../../services/cart.service';
-import { mockOrders, Order } from '../../dev_data/orders';
-import { LucideAngularModule, Minus, Plus, Trash2 } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
+import { OrderService } from '../../services/order.service';
+import { Auth } from '../../services/auth';
+
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, RouterLink, LucideAngularModule],
+  imports: [CommonModule, RouterLink, LucideAngularModule,],
   templateUrl: './cart.html',
-  styleUrl: './cart.css',
+  styleUrl: './cart.css'
 })
-export class Cart {
+export class Cart implements OnInit{
   private cartService = inject(CartService);
+  private orderService = inject(OrderService);
   private router = inject(Router);
+  showAuthModal = false;
+  private auth = inject(Auth);
 
   deliveryFee = 3.99;
+  placing = false;
 
   get items(): CartItem[] {
     return this.cartService.items;
@@ -32,41 +38,30 @@ export class Cart {
 
   removeFromCart(id: number, name: string): void {
     this.cartService.removeFromChart(id);
-    alert(`${name} removed from cart`);
+    alert(name + ' removed from cart');
   }
 
   clearCart(): void {
     this.cartService.clearCart();
   }
 
-   handlePlaceOrder(): void {
+  handlePlaceOrder(): void {
     if (this.items.length === 0) {
-      alert('Your cart is empty');
-      return;
+    alert('Your cart is empty');
+    return;
     }
-
-    const newId = Math.max(...mockOrders.map(o => o.id)) + 1;
-    const newOrder: Order = {
-      id: newId,
-      date: new Date().toISOString().split('T')[0],
-      items: this.items.map(i => ({ name: i.name, price: i.price, quantity: i.quantity })),
-      total: this.getFinalTotal(),
-      status: 'pending',
-      restaurantName: 'Bella Italia',
-      restaurantCuisine: 'Italian',
-      deliveryAddress: '123 Main Street, Apt 4B, New York, NY 10001',
-      paymentMethod: 'Credit Card',
-      estimatedDelivery: '30 minutes',
-      estimatedMinutes: 30,
-      placedAtTimestamp: Date.now(),
-    };
-
-    mockOrders.push(newOrder);
-    this.clearCart();
-    this.router.navigate(['/orders', newOrder.id]);
+    this.router.navigate(['/order-completion']);
   }
-
   getFinalTotal(): number {
     return this.totalPrice + this.deliveryFee;
+  }
+  ngOnInit(): void {
+    if (!this.auth.isLoggedIn()) {
+      this.showAuthModal = true;
+    }
+  }
+  closeModal(): void {
+    this.showAuthModal = false;
+    this.router.navigate(['/menu']);
   }
 }

@@ -2,23 +2,23 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { DishService } from '../../services/dish.service';
-import { restaurants } from '../../dev_data/restaurant';
-import { Dish } from '../../dev_data/dishes';
+import { Dish, DishService } from '../../services/dish.service';
+import { RestaurantService } from '../../services/restaurant.service';
 
 @Component({
   selector: 'app-admin-dishes',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './admin-dishes.html',
-  styleUrl: './admin-dishes.css',
+  styleUrl: './admin-dishes.css'
 })
 export class AdminDishes implements OnInit {
   private dishService = inject(DishService);
+  private restaurantService = inject(RestaurantService);
 
-  categories = ['Pizza', 'Burger', 'Drinks', 'Desserts', 'Salads'];
-  cuisines = ['Italian', 'American', 'Asian', 'Mexican'];
-  restaurantIds = [1, 2, 3];
+  categories = ['Pizza', 'Burgers', 'Pasta', 'Salads', 'Sides', 'Drinks', 'Desserts', 'Sushi', 'Ramen', 'Tacos', 'Steak'];
+  cuisines = ['Italian', 'Japanese', 'American', 'Mexican', 'Asian', 'Steakhouse', 'Korean', 'Kazakh'];
+  restaurantIds: number[] = [];
 
   dishes: Dish[] = [];
   isDialogOpen = false;
@@ -32,16 +32,27 @@ export class AdminDishes implements OnInit {
     category: '',
     cuisine: '',
     restaurantId: '',
-    image: '',
+    image: ''
   };
 
   ngOnInit(): void {
+    this.loadRestaurants();
     this.loadDishes();
+  }
+
+  loadRestaurants(): void {
+    this.restaurantService.getAll().subscribe({
+      next: (rows) => {
+        this.restaurantIds = rows.map((r) => r.id);
+      },
+      error: (err) => {
+        console.error('Failed to load restaurants', err);
+      }
+    });
   }
 
   loadDishes(): void {
     this.loading = true;
-
     this.dishService.getAll().subscribe({
       next: (data) => {
         this.dishes = data;
@@ -60,10 +71,10 @@ export class AdminDishes implements OnInit {
       this.formData = {
         name: dish.name,
         description: dish.description,
-        price: dish.price.toString(),
+        price: String(dish.price),
         category: dish.category,
         cuisine: dish.cuisine,
-        restaurantId: dish.restaurantId.toString(),
+        restaurantId: String(dish.restaurantId),
         image: dish.image
       };
     } else {
@@ -79,7 +90,6 @@ export class AdminDishes implements OnInit {
       };
     }
 
-    this.isDialogOpen = true;
   }
 
   closeDialog(): void {
@@ -99,16 +109,15 @@ export class AdminDishes implements OnInit {
       alert('Please fill in all required fields.');
       return;
     }
+    const parsedPrice = Number(this.formData.price);
+    const parsedRestaurantId = Number(this.formData.restaurantId);
 
-    const parsedPrice = parseFloat(this.formData.price);
-    const parsedRestaurantId = parseInt(this.formData.restaurantId, 10);
-    
-    if (Number.isNaN(parsedPrice) || parsedPrice <= 0) {
+    if (!Number.isFinite(parsedPrice) || parsedPrice <= 0) {
       alert('Price must be a valid positive number');
       return;
     }
 
-    if (Number.isNaN(parsedRestaurantId) || parsedRestaurantId <= 0) {
+    if (!Number.isFinite(parsedRestaurantId) || parsedRestaurantId <= 0) {
       alert('Restaurant ID must be valid');
       return;
     }
@@ -125,11 +134,20 @@ export class AdminDishes implements OnInit {
         image: this.formData.image
       };
 
-      this.dishService.update(updatedDish);
-      alert('Dish updated successfully');
+      this.dishService.update(updatedDish).subscribe({
+        next: () => {
+          alert('Dish updated successfully');
+          this.closeDialog();
+          this.loadDishes();
+        },
+        error: (err) => {
+          console.error('Failed to update dish', err);
+          alert('Failed to update dish');
+        }
+      });
     } else {
       const newDish: Dish = {
-        id: this.dishes.length ? Math.max(...this.dishes.map(d => d.id)) + 1 : 1,
+        id: 0,
         name: this.formData.name,
         description: this.formData.description,
         price: parsedPrice,

@@ -10,6 +10,7 @@ from .views import (
     OrderDetailView,
     AddAddressView,
     UserMeView,
+    LogoutView,
 )
 
 urlpatterns = [
@@ -28,5 +29,9 @@ urlpatterns = [
 
     path('user/', UserMeView.as_view(), name='user-me'),
     path('payment-methods/', AddPaymentMethodView.as_view(), name='payment-methods'),
+
+    path('logout/', LogoutView.as_view(), name='logout'),
+
+
 
 ]

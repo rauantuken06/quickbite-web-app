@@ -68,6 +68,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     name = models.CharField(max_length=255, blank=True)
     phone = models.CharField(max_length=50, blank=True)
+    delivery_address = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
         return self.user.username
@@ -91,6 +92,7 @@ class Order(models.Model):
     payment_method = models.CharField(max_length=255, blank=True)
     estimated_delivery = models.CharField(max_length=255, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    delivery_address = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
         return f'Order {self.id}'

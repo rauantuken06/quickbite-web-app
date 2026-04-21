@@ -1,72 +1,88 @@
+@if (showAuthModal) {
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-xl p-8 max-w-sm w-full mx-4 text-center shadow-xl">
+        <h2 class="text-xl font-bold text-gray-900 mb-2">Sign in Required</h2>
+        <p class="text-gray-600 mb-6">You need to register or log in to view your cart.</p>
+        <div class="flex flex-col gap-3">
+            <a routerLink="/login"
+                class="w-full h-11 bg-orange-500 hover:bg-orange-600 text-white rounded font-semibold flex items-center justify-center">Sign
+                In</a>
+            <a routerLink="/register"
+                class="w-full h-11 border border-orange-500 text-orange-500 hover:bg-orange-50 rounded font-semibold flex items-center justify-center">Create
+                Account</a>
+            <button (click)="closeModal()" class="text-gray-500 hover:text-gray-700 text-sm mt-1">Go back to
+                Menu</button>
+        </div>
+    </div>
+</div>
+}
+
+
 <div class="cart-page">
     @if (items.length === 0) {
-        <div class="empty-cart-container">
-            <div class="empty-cart-icon">🛍️</div>
-            <h2>Your cart is empty</h2>
-            <p>Add some delicious items to get started!</p>
+    <div class="empty-cart-container">
+        <h2>Your cart is empty</h2>
+        <p>Add some delicious items to get started!</p>
 
-            <a routerLink="/menu" class="browse-btn">Browse Menu</a>
-        </div>
+        <a routerLink="/menu" class="browse-btn">Browse Menu</a>
+    </div>
     } @else {
-        <div class="cart-container">
-            <div class="page-header">
-                <h1>Your Cart</h1>
-                <p>Review your items before placing order</p>
-            </div>
-
-            <div class="cart-items">
-                @for (item of items; track item.id) {
-                    <div class="cart-item">
-                        <div class="item-row">
-                            <div class="item-image-wrapper">
-                                <img [src]="item.image" [alt]="item.name", class="item-image" />
-                            </div>
-                        
-
-                            <div class="item-info">
-                                <h3>{{ item.name }}</h3>
-                                <p class="price">${{ item.price.toFixed(2) }}</p>
-                            </div>
-
-                            <div class="quantity-controls">
-                                <button class="qty-btn" (click)="updateQuantity(item.id, item.quantity - 1)">-</button>
-                                <span class="qty-value">{{ item.quantity }}</span>
-                                <button class="qty-btn" (click)="updateQuantity(item.id, item.quantity + 1)">+</button>
-                            </div>
-
-                            <button
-                                class="remove-btn"
-                                (click)="removeFromCart(item.id, item.name)"
-                            >
-                                Remove
-                            </button>
-                        </div>
-                    </div>
-                }
-            </div>
-
-            <div class="order-summary">
-                <h2>Order Summary</h2>
-
-                <div class="summary-row">
-                    <span>Subtotal</span>
-                    <span>${{ totalPrice.toFixed(2) }}</span>
-                </div>
-
-                <div class="summary-row">
-                    <span>Delivery Fee</span>
-                    <span>${{ deliveryFee.toFixed(2) }}</span>
-                </div>
-
-                <div class="summary-total">
-                    <span>Total</span>
-                    <span class="total-price">${{ getFinalTotal().toFixed(2) }}</span>
-                </div>
-
-                <button class="place-order-btn" (click)="handlePlaceOrder()">
-                    Place Order
-                </button>
-            </div>
+    <div class="cart-container">
+        <div class="page-header">
+            <h1>Your Cart</h1>
+            <p>Review your items before placing order</p>
         </div>
+
+        <div class="cart-items">
+            @for (item of items; track item.id) {
+            <div class="cart-item">
+                <div class="item-row">
+                    <div class="item-image-wrapper">
+                        <img [src]="item.image" [alt]="item.name" , class="item-image" />
+                    </div>
+
+
+                    <div class="item-info">
+                        <h3>{{ item.name }}</h3>
+                        <p class="price">${{ item.price.toFixed(2) }}</p>
+                    </div>
+
+                    <div class="quantity-controls">
+                        <button class="qty-btn" (click)="updateQuantity(item.id, item.quantity - 1)">-</button>
+                        <span class="qty-value">{{ item.quantity }}</span>
+                        <button class="qty-btn" (click)="updateQuantity(item.id, item.quantity + 1)">+</button>
+                    </div>
+
+                    <button class="remove-btn" (click)="removeFromCart(item.id, item.name)">
+                        Remove
+                    </button>
+                </div>
+            </div>
+            }
+        </div>
+
+        <div class="order-summary">
+            <h2>Order Summary</h2>
+
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span>${{ totalPrice.toFixed(2) }}</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Delivery Fee</span>
+                <span>${{ deliveryFee.toFixed(2) }}</span>
+            </div>
+
+            <div class="summary-total">
+                <span>Total</span>
+                <span class="total-price">${{ getFinalTotal().toFixed(2) }}</span>
+            </div>
+
+            <button class="place-order-btn" (click)="handlePlaceOrder()">
+                Place Order
+            </button>
+        </div>
+    </div>
     }
 </div>

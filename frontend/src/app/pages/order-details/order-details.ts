@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { mockOrders, Order, OrderStatus } from '../../dev_data/orders';
 import { DinoGame } from '../../components/dino-game/dino-game';
+import { Order, OrderService, OrderStatus } from '../../services/order.service';
 
 @Component({
   selector: 'app-order-details',
@@ -18,12 +18,22 @@ export class OrderDetails implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
-  ) {}
+    private router: Router,
+    private orderService: OrderService
+  ) { }
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.order = mockOrders.find((o) => o.id === id);
+    if (!id) return;
+
+    this.orderService.getById(id).subscribe({
+      next: (order) => {
+        this.order = order;
+      },
+      error: (err) => {
+        console.error('Failed to load order', err);
+      }
+    });
   }
 
   goBackToOrders(): void {
@@ -64,8 +74,8 @@ export class OrderDetails implements OnInit {
 
   getClockProgress(): number {
     const o = this.order;
-    if (!o?.estimatedMinutes || !o?.placedAtTimestamp) return 0;
-    const elapsed = (Date.now() - o.placedAtTimestamp) / 60_000;
+    if (!o || !o.estimatedMinutes || !o.placedAtTimestamp) return 0;
+    const elapsed = (Date.now() - o.placedAtTimestamp) / 60000;
     return Math.min(elapsed / o.estimatedMinutes, 1);
   }
 
@@ -74,10 +84,11 @@ export class OrderDetails implements OnInit {
   }
 
   getElapsedMinutes(): number {
-    if (!this.order?.placedAtTimestamp) return 0;
-    return Math.floor((Date.now() - this.order.placedAtTimestamp) / 60_000);
+    if (!this.order || !this.order.placedAtTimestamp) return 0;
+    return Math.floor((Date.now() - this.order.placedAtTimestamp) / 60000);
   }
-  playGame(): void{
+
+  playGame(): void {
     this.showGame = true;
   }
 }

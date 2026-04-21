@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { LucideAngularModule, UtensilsCrossed } from 'lucide-angular';
+import { Auth } from '../../services/auth';
 
 @Component({
   selector: 'app-login',
@@ -17,10 +18,23 @@ export class Login {
   username = '';
   password = '';
   error = '';
+  loading = false;
 
-  handleSubmit(event: Event) {
+  constructor(private auth: Auth, private router: Router) { }
+
+  handleSubmit(event: Event): void {
     event.preventDefault();
     this.error = '';
-
+    this.loading = true;
+    this.auth.login({ username: this.username, password: this.password }).subscribe({
+      next: () => {
+        this.loading = false;
+        this.router.navigate(['/menu']);
+      },
+      error: () => {
+        this.loading = false;
+        this.error = 'Invalid username or password';
+      }
+    });
   }
 }

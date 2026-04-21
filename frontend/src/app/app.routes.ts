@@ -44,5 +44,10 @@ export const routes: Routes = [
     //canActivate: [authGuard],
     loadComponent: () => import('./pages/account/account').then((m) => m.Account)
   },
-  { path: '**', redirectTo: 'menu' }
+  {
+    path: 'order-completion',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/order-completion/order-completion').then((m) => m.OrderCompletion)
+  },
+  { path: '**', redirectTo: 'menu' },
 ];

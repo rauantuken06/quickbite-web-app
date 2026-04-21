@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http'
-import { Router } from '@angular/router'
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 
 export interface LoginRequest {
@@ -12,60 +12,71 @@ export interface RegisterRequest {
   username: string;
   email: string;
   password: string;
-  password2: string;
+  name?: string;
+  phone?: string;
+  delivery_address?: string;
 }
 
-export interface AuthResponse {
-  token: string;
-  user_id: number;
+export interface TokenPairResponse {
+  access: string;
+  refresh: string;
+}
+
+export interface UserMeResponse {
+  id: number;
   username: string;
+  email: string;
+  name: string;
+  phone: string;
+  addresses: Array<{ id: number; address: string; is_default: boolean }>;
+  paymentMethods: Array<{ id: number; type: string; details: string; is_default: boolean }>;
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class Auth {
   private apiUrl = 'http://localhost:8000/api';
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
-  login(data: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, data).pipe(
-      tap(res => {
-        localStorage.setItem('token', res.token),
-        localStorage.setItem('username', res.username),
-        localStorage.setItem('user_id', String(res.user_id));
+  login(data: LoginRequest): Observable<TokenPairResponse> {
+    return this.http.post<TokenPairResponse>(this.apiUrl + '/token/', data).pipe(
+      tap((res) => {
+        localStorage.setItem('access_token', res.access);
+        localStorage.setItem('refresh_token', res.refresh);
       })
     );
   }
 
-  register(data: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/register`, data).pipe(
-      tap(res => {
-        localStorage.setItem('token', res.token),
-        localStorage.setItem('username', res.username),
-        localStorage.setItem('user_id', String(res.user_id));
-      })
-    );
+  register(data: RegisterRequest): Observable<UserMeResponse> {
+    return this.http.post<UserMeResponse>(this.apiUrl + '/register/', data);
   }
 
-  logout(): void {
-    const token = this.getToken();
-    if (token) {
-      this.http.post(`${this.apiUrl}/auth/logout`, {}).subscribe();
+  getMe(): Observable<UserMeResponse> {
+    return this.http.get<UserMeResponse>(this.apiUrl + '/user/');
+  }
+
+  logout(callBackend = true): void {
+    const refresh = this.getRefreshToken();
+    if (callBackend && refresh) {
+      this.http.post(this.apiUrl + '/logout/', { refresh }).subscribe();
     }
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    localStorage.removeItem('user_id');
+    this.clearSession();
+  }
+
+  private clearSession(): void {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
     this.router.navigate(['/login']);
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return localStorage.getItem('access_token');
   }
 
-  getUsername(): string | null {
-    return localStorage.getItem('username');
+  getRefreshToken(): string | null {
+    return localStorage.getItem('refresh_token');
   }
 
   isLoggedIn(): boolean {

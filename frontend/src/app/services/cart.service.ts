@@ -1,10 +1,11 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
 export interface CartItem {
-    id: number,
-    name: string,
-    price: number,
-    image: string,
+    id: number;
+    restaurantId: number;
+    name: string;
+    price: number;
+    image: string;
     quantity: number;
 }
 
@@ -12,45 +13,55 @@ export interface CartItem {
     providedIn: 'root'
 })
 export class CartService {
-    items: CartItem[] = [
-        {
-            id: 1,
-            name: 'Pepperoni Pizza',
-            price: 12.99,
-            image: 'https://tse2.mm.bing.net/th/id/OIP.wdTVcf6_0KeX9Vu_1BJ-zQHaHa?w=1080&h=1080&rs=1&pid=ImgDetMain&o=7&rm=3',
-            quantity: 1
-        },
-        {
-            id: 2,
-            name: 'Cheeseburger',
-            price: 8.5,
-            image: 'https://tse3.mm.bing.net/th/id/OIP.zggta2Cqf6JS2j9EUOfopwHaJQ?w=900&h=1125&rs=1&pid=ImgDetMain&o=7&rm=3',
-            quantity: 2
-        }
-    ];
+    private storageKey = 'cart';
+    items: CartItem[] = [];
+
+    constructor() {
+        this.items = this.read();
+    }
 
     get totalPrice(): number {
-        return this.items.reduce((sum, item) => sum += item.price * item.quantity, 0);
+        return this.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    }
+
+    addItem(item: CartItem): void {
+        const existing = this.items.find((x) => x.id === item.id);
+        if (existing) {
+            existing.quantity += item.quantity;
+        } else {
+            this.items.push(item);
+        }
+        this.write();
     }
 
     updateQuantity(id: number, quantity: number): void {
-        const item = this.items.find(i => i.id === id);
-
+        const item = this.items.find((x) => x.id === id);
         if (!item) return;
 
-        if (quantity <= 0) {
-            this.removeFromChart(id);
-            return;
-        }
-
-        item.quantity = quantity;
-    } 
+    }
 
     removeFromChart(id: number): void {
-        this.items = this.items.filter(item => item.id !== id);
+        this.items = this.items.filter((x) => x.id !== id);
+        this.write();
     }
 
     clearCart(): void {
         this.items = [];
+        this.write();
+    }
+
+    private read(): CartItem[] {
+        const raw = localStorage.getItem(this.storageKey);
+        if (!raw) return [];
+        try {
+            return JSON.parse(raw) as CartItem[];
+        } catch {
+            return [];
+        }
+    }
+
+    private write(): void {
+        localStorage.setItem(this.storageKey, JSON.stringify(this.items));
     }
 }
+
