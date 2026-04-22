@@ -1,0 +1,66 @@
+<div class="admin-page">
+    <div class="admin-subnav">
+        <a routerLink="/admin/dishes" class="subnav-link">Dishes</a>
+        <a routerLink="/admin/categories" class="subnav-link">Categories</a>
+        <a routerLink="/admin/orders" class="subnav-link active">Orders</a>
+    </div>
+
+    <div class="page-header">
+        <div>
+            <h1>Manage Orders</h1>
+            <p>View and update the status of all customer orders</p>
+        </div>
+
+        <select class="status-filter" [value]="selectedStatus" (change)="onStatusFilterChange($any($event.target).value)">
+            <option value="">All statuses</option>
+            <option *ngFor="let s of statuses" [value]="s">{{ s | titlecase }}</option>
+        </select>
+    </div>
+
+    <div *ngIf="loading" class="empty-state">Loading orders...</div>
+
+    <div *ngIf="!loading && orders.length === 0" class="empty-state">No orders found.</div>
+
+    <div class="table-wrapper" *ngIf="!loading && orders.length > 0">
+        <div class="table-scroll">
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Restaurant</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th class="actions-header">Change Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let order of orders">
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.date }}</td>
+                        <td>{{ order.customerUsername }}</td>
+                        <td>{{ order.restaurantName }}</td>
+                        <td class="items-cell">
+                            <span *ngFor="let item of order.items" class="item-chip">
+                                {{ item.name }} x{{ item.quantity }}
+                            </span>
+                        </td>
+                        <td>{{ order.total | currency }}</td>
+                        <td><span class="badge" [ngClass]="statusClass(order.status)">{{ order.status | titlecase }}</span></td>
+                        <td>
+                            <select
+                                class="status-select"
+                                [value]="order.status"
+                                [disabled]="updatingId === order.id"
+                                (change)="updateStatus(order, $any($event.target).value)">
+                                <option *ngFor="let s of statuses" [value]="s">{{ s | titlecase }}</option>
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

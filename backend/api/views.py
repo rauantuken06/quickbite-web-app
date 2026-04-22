@@ -29,7 +29,9 @@ class RegisterView(APIView):
         user = User.objects.create_user(
             username=username,
             email=email,
-            password=password
+            password=password,
+            is_staff=False,
+            is_superuser=False
         )
 
         UserProfile.objects.create(
@@ -67,6 +69,8 @@ class OrderListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
+        if self.request.user.is_staff:
+            return Order.objects.all().select_related('user', 'restaurant').prefetch_related('items__dish').order_by('-created_at')
         return Order.objects.filter(user=self.request.user)
 
     def create(self, request, *args, **kwargs):
@@ -106,8 +110,8 @@ class OrderListCreateView(generics.ListCreateAPIView):
         order.total = total
         order.save()
 
-        # Broadcast updated order count to the user's WebSocket group
-        total_orders = Order.objects.filter(user=request.user).count()
+        # Broadcast updated global order count to the user's WebSocket group
+        total_orders = Order.objects.count()
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(
             user_group_name(request.user.id),
@@ -123,6 +127,8 @@ class OrderDetailView(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
+        if self.request.user.is_staff:
+            return Order.objects.all()
         return Order.objects.filter(user=self.request.user)
     
 
@@ -148,13 +154,45 @@ class AddAddressView(APIView):
             'address': address.address,
             'is_default': address.is_default
         }, status=201)
-    
+
+
+class AddressDetailView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def patch(self, request, pk):
+        try:
+            address = Address.objects.get(pk=pk, user=request.user)
+        except Address.DoesNotExist:
+            return Response({'error': 'Not found'}, status=404)
+        address_text = request.data.get('address')
+        if address_text is not None:
+            address.address = address_text
+        address.save()
+        return Response({'id': address.id, 'address': address.address, 'is_default': address.is_default})
+
+
 class UserMeView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         return Response(UserSerializer(request.user).data)
-    
+
+    def patch(self, request):
+        user = request.user
+        email = request.data.get('email')
+        if email is not None:
+            user.email = email
+            user.save()
+        profile = user.profile
+        name = request.data.get('name')
+        phone = request.data.get('phone')
+        if name is not None:
+            profile.name = name
+        if phone is not None:
+            profile.phone = phone
+        profile.save()
+        return Response(UserSerializer(user).data)
+
 
 class AddPaymentMethodView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -181,6 +219,63 @@ class AddPaymentMethodView(APIView):
             'details': payment.details,
             'is_default': payment.is_default
         }, status=201)
+
+
+class PaymentMethodDetailView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def patch(self, request, pk):
+        try:
+            payment = PaymentMethod.objects.get(pk=pk, user=request.user)
+        except PaymentMethod.DoesNotExist:
+            return Response({'error': 'Not found'}, status=404)
+        type_ = request.data.get('type')
+        details = request.data.get('details')
+        is_default = request.data.get('is_default')
+        if type_ is not None:
+            payment.type = type_
+        if details is not None:
+            payment.details = details
+        if is_default:
+            PaymentMethod.objects.filter(user=request.user).update(is_default=False)
+            payment.is_default = True
+        payment.save()
+        return Response({'id': payment.id, 'type': payment.type, 'details': payment.details, 'is_default': payment.is_default})
+
+
+class AdminOrderListView(generics.ListAPIView):
+    serializer_class = OrderSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_permissions(self):
+        return [permissions.IsAdminUser()]
+
+    def get_queryset(self):
+        qs = Order.objects.all().select_related('user', 'restaurant').prefetch_related('items__dish').order_by('-created_at')
+        status_filter = self.request.query_params.get('status')
+        if status_filter:
+            qs = qs.filter(status=status_filter)
+        return qs
+
+
+class AdminOrderStatusUpdateView(APIView):
+    permission_classes = [permissions.IsAdminUser]
+
+    def patch(self, request, pk):
+        try:
+            order = Order.objects.get(pk=pk)
+        except Order.DoesNotExist:
+            return Response({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        new_status = request.data.get('status')
+        valid_statuses = [choice[0] for choice in Order.status.field.choices]
+        if not new_status or new_status not in valid_statuses:
+            return Response({'error': f'Invalid status. Valid options: {valid_statuses}'}, status=status.HTTP_400_BAD_REQUEST)
+
+        order.status = new_status
+        order.save()
+        return Response(OrderSerializer(order).data)
+
 
 class LogoutView(APIView):
     permission_classes = [permissions.IsAuthenticated]

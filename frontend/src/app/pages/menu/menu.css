@@ -151,15 +151,6 @@
     font-size: 14px;
 }
 
-.cart-link {
-    background: #111827;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 12px;
-    padding: 10px 12px;
-    font-size: 14px;
-}
-
 .category-row {
     display: flex;
     flex-wrap: wrap;

@@ -53,4 +53,4 @@ class OrderCountConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def _get_order_count(self):
-        return Order.objects.filter(user=self.user).count()
+        return Order.objects.count()

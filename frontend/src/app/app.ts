@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterOutlet, Router } from '@angular/router';
 import { Footer } from './pages/footer/footer';
-import { LucideAngularModule, ShoppingCart, PackageOpen, UserRoundCog, UserRound, KeyRound, SquarePlus, UtensilsCrossed } from 'lucide-angular';
+import { LucideAngularModule, ShoppingCart, PackageOpen, UserRoundCog, UserRound, KeyRound, SquarePlus, UtensilsCrossed, LogOut } from 'lucide-angular';
 import { OrderService } from './services/order.service';
 import { CartService } from './services/cart.service';
 import { Auth } from './services/auth';
@@ -25,6 +25,7 @@ export class App implements OnInit, OnDestroy {
   readonly KeyRound = KeyRound;
   readonly SquarePlus = SquarePlus;
   readonly UtensilsCrossed = UtensilsCrossed;
+  readonly LogOut = LogOut;
 
   totalOrders = 0;
   private wsSub?: Subscription;
@@ -38,11 +39,11 @@ export class App implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.wsSub = this.orderWs.totalOrders$.subscribe(count => {
+      this.totalOrders = count;
+    });
     if (this.auth.isLoggedIn()) {
       this.orderWs.connect();
-      this.wsSub = this.orderWs.totalOrders$.subscribe(count => {
-        this.totalOrders = count;
-      });
     }
   }
 
@@ -59,6 +60,16 @@ export class App implements OnInit, OnDestroy {
     return this.router.url === path;
   }
   isLoggedIn(): boolean {
-  return this.auth.isLoggedIn();
+    return this.auth.isLoggedIn();
+  }
+
+  isAdmin(): boolean {
+    return this.auth.isAdmin();
+  }
+
+  logout(): void {
+    this.orderWs.disconnect();
+    this.totalOrders = 0;
+    this.auth.logout();
   }
 }

@@ -23,6 +23,7 @@ export interface Order {
     estimatedDelivery?: string;
     estimatedMinutes?: number;
     placedAtTimestamp?: number;
+    customerUsername?: string;
 }
 
 export interface CreateOrderPayload {
@@ -44,6 +45,7 @@ interface ApiOrder {
     delivery_address: string;
     payment_method: string;
     estimated_delivery: string;
+    user?: { username: string };
 }
 
 @Injectable({
@@ -71,6 +73,21 @@ export class OrderService {
         );
     }
 
+    getAllAdmin(statusFilter?: string): Observable<Order[]> {
+        const url = statusFilter
+            ? `http://localhost:8000/api/admin/orders/?status=${statusFilter}`
+            : 'http://localhost:8000/api/admin/orders/';
+        return this.http.get<ApiOrder[]>(url).pipe(
+            map((rows) => rows.map((o) => this.mapOrder(o)))
+        );
+    }
+
+    updateStatus(id: number, newStatus: string): Observable<Order> {
+        return this.http.patch<ApiOrder>(`http://localhost:8000/api/admin/orders/${id}/status/`, { status: newStatus }).pipe(
+            map((o) => this.mapOrder(o))
+        );
+    }
+
     private mapOrder(o: ApiOrder): Order {
         const minutes = this.extractMinutes(o.estimated_delivery);
         const ts = o.date ? new Date(o.date).getTime() : undefined;
@@ -86,7 +103,8 @@ export class OrderService {
             paymentMethod: o.payment_method || '',
             estimatedDelivery: o.estimated_delivery || '',
             estimatedMinutes: minutes,
-            placedAtTimestamp: ts
+            placedAtTimestamp: ts,
+            customerUsername: o.user?.username
         };
     }
 

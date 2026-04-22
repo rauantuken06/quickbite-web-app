@@ -34,7 +34,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'name', 'phone', 'addresses', 'paymentMethods']
+        fields = ['id', 'username', 'email', 'name', 'phone', 'addresses', 'paymentMethods', 'is_staff']
 
 class RestaurantSerializer(serializers.ModelSerializer):
     dishesId = serializers.PrimaryKeyRelatedField(

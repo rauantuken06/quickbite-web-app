@@ -51,10 +51,10 @@
           </a>
 
           <a
-            *ngIf = "isLoggedIn()"
+            *ngIf = "isAdmin()"
             routerLink="/admin/dishes"
             class="px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
-            [ngClass]="isActive('/admin/dishes') || isActive('/admin/categories') ? 'bg-orange-50 text-orange-600' : 'text-gray-700 hover:bg-gray-100'"
+            [ngClass]="isActive('/admin/dishes') || isActive('/admin/categories') || isActive('/admin/orders') ? 'bg-orange-50 text-orange-600' : 'text-gray-700 hover:bg-gray-100'"
           >
             <lucide-angular [img]="UserRoundCog" class="userroundcog-logo"></lucide-angular>
             <span>Admin</span>
@@ -71,6 +71,15 @@
         </div>
 
         <div class="flex items-center space-x-2">
+          <button
+            *ngIf="isLoggedIn()"
+            (click)="logout()"
+            class="px-4 py-2 rounded-lg transition-colors flex items-center space-x-2 text-gray-700 hover:bg-gray-100"
+          >
+            <lucide-angular [img]="LogOut" class="logout-logo"></lucide-angular>
+            <span class="hidden sm:inline">Logout</span>
+          </button>
+
           <a
             *ngIf = "!isLoggedIn()"
             routerLink="/login"

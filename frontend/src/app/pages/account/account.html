@@ -4,16 +4,23 @@
     <p>Manage your personal information and preferences</p>
   </header>
 
+  <!-- Personal Information -->
   <article class="card">
     <div class="card-head">
       <div class="title-wrap">
         <lucide-angular [img]="SquareUserRound" class="square-user-round"></lucide-angular>
         <h2>Personal Information</h2>
       </div>
-      <button class="btn btn-outline" type="button">Edit</button>
+      <div class="card-actions" *ngIf="!editingPersonal">
+        <button class="btn btn-outline" type="button" (click)="startEditPersonal()">Edit</button>
+      </div>
+      <div class="card-actions" *ngIf="editingPersonal">
+        <button class="btn btn-outline" type="button" (click)="cancelEditPersonal()">Cancel</button>
+        <button class="btn btn-primary" type="button" [disabled]="saving" (click)="savePersonalInfo()">Save</button>
+      </div>
     </div>
 
-    <div class="info-list">
+    <div class="info-list" *ngIf="!editingPersonal">
       <div>
         <label>Full Name</label>
         <p>{{ user.name }}</p>
@@ -22,65 +29,132 @@
         <label>Email Address</label>
         <div class="email-info">
           <lucide-angular [img]="Mails" class="mails"></lucide-angular>
-          <p> {{ user.email }}</p>
+          <p>{{ user.email }}</p>
         </div>
       </div>
       <div>
         <label>Phone Number</label>
         <div class="phone-info">
           <lucide-angular [img]="PhoneCall" class="phone-call"></lucide-angular>
-          <p> {{ user.phone }}</p>
+          <p>{{ user.phone || 'No phone number saved yet.' }}</p>
         </div>
+      </div>
+    </div>
+
+    <div class="edit-form" *ngIf="editingPersonal">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" class="form-input" [(ngModel)]="personalForm.name" placeholder="Full name" />
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" class="form-input" [(ngModel)]="personalForm.email" placeholder="Email" />
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" class="form-input" [(ngModel)]="personalForm.phone" placeholder="Phone number" />
       </div>
     </div>
   </article>
 
+  <!-- Delivery Address -->
   <article class="card">
     <div class="card-head">
       <div class="title-wrap">
         <lucide-angular [img]="MapPinHouse" class="map-pin-house"></lucide-angular>
         <h2>Delivery Address</h2>
       </div>
-      <button class="btn btn-outline" type="button">Edit</button>
+      <div class="card-actions" *ngIf="!editingAddress">
+        <button class="btn btn-outline" type="button" (click)="startEditAddress()">Edit</button>
+      </div>
+      <div class="card-actions" *ngIf="editingAddress">
+        <button class="btn btn-outline" type="button" (click)="cancelEditAddress()">Cancel</button>
+        <button class="btn btn-primary" type="button" [disabled]="saving" (click)="saveAddress()">Save</button>
+      </div>
     </div>
 
-    <div class="address-box">
-      <p>{{ user.deliveryAddress }}</p>
+    <div class="address-box" *ngIf="!editingAddress">
+      <p>{{ user.deliveryAddress || 'No address saved yet.' }}</p>
+    </div>
+
+    <div class="edit-form" *ngIf="editingAddress">
+      <div class="form-group">
+        <label>Address</label>
+        <input type="text" class="form-input" [(ngModel)]="addressForm" placeholder="Enter delivery address" />
+      </div>
     </div>
   </article>
 
+  <!-- Payment Methods -->
   <article class="card">
     <div class="card-head">
       <div class="title-wrap">
         <lucide-angular [img]="BadgeDollarSign" class="badge-dollar-sign"></lucide-angular>
         <h2>Payment Methods</h2>
       </div>
-      <button class="btn btn-primary" type="button">Add New</button>
+      <button class="btn btn-primary" type="button" (click)="showAddPayment = !showAddPayment">
+        {{ showAddPayment ? 'Cancel' : 'Add New' }}
+      </button>
+    </div>
+
+    <div class="edit-form add-payment-form" *ngIf="showAddPayment">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Type</label>
+          <input type="text" class="form-input" [(ngModel)]="newPaymentForm.type" placeholder="e.g. Visa" />
+        </div>
+        <div class="form-group">
+          <label>Card Details</label>
+          <input type="text" class="form-input" [(ngModel)]="newPaymentForm.details" placeholder="e.g. **** **** **** 4242" />
+        </div>
+      </div>
+      <button class="btn btn-primary" type="button" [disabled]="saving" (click)="submitAddPayment()">Add</button>
     </div>
 
     <div class="payment-list">
+      <p class="no-data" *ngIf="user.paymentMethods.length === 0">No payment methods saved yet.</p>
       <div class="payment-item" *ngFor="let method of user.paymentMethods; trackBy: trackByPaymentId">
-        <div class="payment-left">
-          <lucide-angular [img]="CreditCard" class="credit-card"></lucide-angular>
-          <div>
-            <div class="payment-title-row">
-              <p class="payment-title">{{ method.type }}</p>
-              <span class="badge-default" *ngIf="method.isDefault">✔ Default</span>
-            </div>
-            <p class="payment-details">{{ method.details }}</p>
-          </div>
-        </div>
 
-        <div class="payment-actions">
-          <button
-            class="btn btn-link"
-            type="button"
-            *ngIf="!method.isDefault"
-            (click)="setDefaultPaymentMethod(method.id)">
-            Set as Default
-          </button>
-          <button class="btn btn-icon" type="button" aria-label="Edit payment"><lucide-angular [img]="PencilLine"></lucide-angular></button>
-        </div>
+        <ng-container *ngIf="editingPaymentId !== method.id">
+          <div class="payment-left">
+            <lucide-angular [img]="CreditCard" class="credit-card"></lucide-angular>
+            <div>
+              <div class="payment-title-row">
+                <p class="payment-title">{{ method.type }}</p>
+                <span class="badge-default" *ngIf="method.isDefault">&#10004; Default</span>
+              </div>
+              <p class="payment-details">{{ method.details }}</p>
+            </div>
+          </div>
+          <div class="payment-actions">
+            <button class="btn btn-link" type="button" *ngIf="!method.isDefault" (click)="setDefaultPaymentMethod(method.id)">
+              Set as Default
+            </button>
+            <button class="btn btn-icon" type="button" aria-label="Edit payment" (click)="startEditPayment(method)">
+              <lucide-angular [img]="PencilLine"></lucide-angular>
+            </button>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="editingPaymentId === method.id">
+          <div class="payment-edit-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Type</label>
+                <input type="text" class="form-input" [(ngModel)]="editPaymentForm.type" />
+              </div>
+              <div class="form-group">
+                <label>Details</label>
+                <input type="text" class="form-input" [(ngModel)]="editPaymentForm.details" />
+              </div>
+            </div>
+            <div class="payment-edit-actions">
+              <button class="btn btn-outline" type="button" (click)="cancelEditPayment()">Cancel</button>
+              <button class="btn btn-primary" type="button" [disabled]="saving" (click)="savePaymentMethod(method.id)">Save</button>
+            </div>
+          </div>
+        </ng-container>
+
       </div>
     </div>
   </article>

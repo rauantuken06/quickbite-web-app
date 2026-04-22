@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth-guard';
+import { adminGuard } from './guards/admin-guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'menu', pathMatch: 'full' },
@@ -33,10 +34,11 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    // canActivate: [authGuard],
+    canActivate: [adminGuard],
     children: [
       { path: 'categories', loadComponent: () => import('./pages/admin-categories/admin-categories').then((m) => m.AdminCategories) },
-      { path: 'dishes', loadComponent: () => import('./pages/admin-dishes/admin-dishes').then((m) => m.AdminDishes) }    
+      { path: 'dishes', loadComponent: () => import('./pages/admin-dishes/admin-dishes').then((m) => m.AdminDishes) },
+      { path: 'orders', loadComponent: () => import('./pages/admin-orders/admin-orders').then((m) => m.AdminOrders) }
     ]
   },
   {

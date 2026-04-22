@@ -28,6 +28,7 @@ export interface UserMeResponse {
   email: string;
   name: string;
   phone: string;
+  is_staff: boolean;
   addresses: Array<{ id: number; address: string; is_default: boolean }>;
   paymentMethods: Array<{ id: number; type: string; details: string; is_default: boolean }>;
 }
@@ -57,6 +58,14 @@ export class Auth {
     return this.http.get<UserMeResponse>(this.apiUrl + '/user/');
   }
 
+  storeAdminFlag(isStaff: boolean): void {
+    localStorage.setItem('is_admin', isStaff ? '1' : '0');
+  }
+
+  isAdmin(): boolean {
+    return localStorage.getItem('is_admin') === '1';
+  }
+
   logout(callBackend = true): void {
     const refresh = this.getRefreshToken();
     if (callBackend && refresh) {
@@ -68,6 +77,7 @@ export class Auth {
   private clearSession(): void {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
+    localStorage.removeItem('is_admin');
     this.router.navigate(['/login']);
   }
 
@@ -81,5 +91,33 @@ export class Auth {
 
   isLoggedIn(): boolean {
     return !!this.getToken();
+  }
+
+  updateMe(data: { name?: string; email?: string; phone?: string }): Observable<UserMeResponse> {
+    return this.http.patch<UserMeResponse>(this.apiUrl + '/user/', data);
+  }
+
+  updateAddress(id: number, address: string): Observable<{ id: number; address: string; is_default: boolean }> {
+    return this.http.patch<{ id: number; address: string; is_default: boolean }>(
+      this.apiUrl + '/addresses/' + id + '/', { address }
+    );
+  }
+
+  addAddress(address: string): Observable<{ id: number; address: string; is_default: boolean }> {
+    return this.http.post<{ id: number; address: string; is_default: boolean }>(
+      this.apiUrl + '/addresses/', { address }
+    );
+  }
+
+  addPaymentMethod(type: string, details: string): Observable<{ id: number; type: string; details: string; is_default: boolean }> {
+    return this.http.post<{ id: number; type: string; details: string; is_default: boolean }>(
+      this.apiUrl + '/payment-methods/', { type, details }
+    );
+  }
+
+  updatePaymentMethod(id: number, data: { type?: string; details?: string; is_default?: boolean }): Observable<{ id: number; type: string; details: string; is_default: boolean }> {
+    return this.http.patch<{ id: number; type: string; details: string; is_default: boolean }>(
+      this.apiUrl + '/payment-methods/' + id + '/', data
+    );
   }
 }

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { LucideAngularModule, UtensilsCrossed } from 'lucide-angular';
 import { Auth } from '../../services/auth';
+import { OrderWsService } from '../../services/order-ws.service';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,7 @@ export class Login {
   error = '';
   loading = false;
 
-  constructor(private auth: Auth, private router: Router) { }
+  constructor(private auth: Auth, private router: Router, private orderWs: OrderWsService) { }
 
   handleSubmit(event: Event): void {
     event.preventDefault();
@@ -29,6 +30,8 @@ export class Login {
     this.auth.login({ username: this.username, password: this.password }).subscribe({
       next: () => {
         this.loading = false;
+        this.auth.getMe().subscribe(user => this.auth.storeAdminFlag(user.is_staff));        
+        this.orderWs.connect();        
         this.router.navigate(['/menu']);
       },
       error: () => {

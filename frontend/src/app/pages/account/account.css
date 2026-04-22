@@ -104,6 +104,11 @@
   gap: 0.75rem;
 }
 
+.no-data {
+  margin: 0;
+  color: #6b7280;
+}
+
 .payment-item {
   display: flex;
   align-items: center;
@@ -272,4 +277,76 @@
 
 .credit-card {
   color: rgb(81, 140, 241);
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.edit-form {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.form-group {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--text);
+  background: #fff;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.add-payment-form {
+  margin-bottom: 1rem;
+  padding: 0.9rem;
+  background: #f9fafb;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.payment-edit-form {
+  width: 100%;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.payment-edit-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+@media (max-width: 480px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
 }

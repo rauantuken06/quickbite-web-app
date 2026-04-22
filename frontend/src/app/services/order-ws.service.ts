@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Auth } from './auth';
 
 @Injectable({
@@ -9,7 +9,7 @@ export class OrderWsService implements OnDestroy {
   private ws: WebSocket | null = null;
   private readonly wsUrl = 'ws://localhost:8000/ws/orders/';
 
-  readonly totalOrders$ = new Subject<number>();
+  readonly totalOrders$ = new BehaviorSubject<number>(0);
 
   constructor(private auth: Auth) {}
 
