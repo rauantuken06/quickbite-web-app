@@ -97,6 +97,35 @@
     </div>
     <p class="body-text">{{ currentOrder.paymentMethod }}</p>
   </article>
+  <article class="card rating-card">
+    <div class="section-title">
+      <span class="material-symbols-outlined">star</span>
+      <h2>Rate Your Order</h2>
+    </div>
+    <ng-container *ngIf="!ratingSubmitted; else ratingDone">
+      <p class="rating-prompt">How was your experience?</p>
+      <div class="stars" (mouseleave)="clearHover()">
+        <button
+          *ngFor="let s of stars"
+          type="button"
+          class="star-btn"
+          [class.filled]="s <= (hoveredStar || rating)"
+          (mouseenter)="hoverStar(s)"
+          (click)="setRating(s)"
+          [attr.aria-label]="s + ' star'"
+        >
+          <span class="material-symbols-outlined star-icon">star</span>
+        </button>
+      </div>
+    </ng-container>
+    <ng-template #ratingDone>
+      <div class="rating-thanks">
+        <span class="material-symbols-outlined rating-check">check_circle</span>
+        <p>Thanks for your {{ rating }}-star rating!</p>
+      </div>
+    </ng-template>
+  </article>
+
   <app-dino-game *ngIf="showGame" (close)="showGame = false"></app-dino-game>
 </section>
 

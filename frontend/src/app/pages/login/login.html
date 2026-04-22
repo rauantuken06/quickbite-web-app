@@ -9,7 +9,7 @@
         </div>
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
             <form (submit)="handleSubmit($event)" class="space-y-6">
-                <div *ngIf="error" class="alert alert-danger flex items-center gap-2"> </span> <span>{{ error }}</span> </div>
+                <div *ngIf="error" class="alert alert-danger flex items-center gap-2"> <span>{{ error }}</span> </div>
                 <div class="space-y-2"> <label for="username" class="block font-medium">Username</label> <input
                         id="username" type="text" placeholder="Enter your username" [(ngModel)]="username"
                         name="username" class="h-11 w-full border rounded px-3" /> </div>

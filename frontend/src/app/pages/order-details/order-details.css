@@ -293,3 +293,58 @@
 .game-btn:hover {
   background: var(--primary-hover);
 }
+
+.rating-card {
+  text-align: center;
+}
+
+.rating-prompt {
+  margin: 0 0 0.75rem;
+  color: var(--muted);
+}
+
+.stars {
+  display: flex;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.star-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.1rem;
+  color: #d1d5db;
+  transition: color 0.15s, transform 0.1s;
+}
+
+.star-btn.filled {
+  color: #f97316;
+}
+
+.star-btn:hover {
+  transform: scale(1.2);
+}
+
+.star-icon {
+  font-size: 2.2rem;
+  font-variation-settings: 'FILL' 1;
+}
+
+.rating-thanks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  color: #166534;
+}
+
+.rating-check {
+  font-size: 2rem;
+}
+
+.rating-thanks p {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1rem;
+}

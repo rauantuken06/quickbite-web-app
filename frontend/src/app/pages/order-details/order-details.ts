@@ -91,4 +91,23 @@ export class OrderDetails implements OnInit {
   playGame(): void {
     this.showGame = true;
   }
+
+  rating = 0;
+  hoveredStar = 0;
+  ratingSubmitted = false;
+
+  setRating(star: number): void {
+    this.rating = star;
+    this.ratingSubmitted = true;
+  }
+
+  hoverStar(star: number): void {
+    this.hoveredStar = star;
+  }
+
+  clearHover(): void {
+    this.hoveredStar = 0;
+  }
+
+  readonly stars = [1, 2, 3, 4, 5];
 }
